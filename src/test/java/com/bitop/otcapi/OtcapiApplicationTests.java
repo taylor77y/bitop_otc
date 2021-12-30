@@ -1,0 +1,13 @@
+package com.bitop.otcapi;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class OtcapiApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
