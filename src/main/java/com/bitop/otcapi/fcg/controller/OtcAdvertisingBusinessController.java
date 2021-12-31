@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(tags = "OTC广告商户模块")
+@Api(tags = "OTC-广告商户模块")
 @RequestMapping("/otc/ezAdvertisingBusiness")
 public class OtcAdvertisingBusinessController {
 

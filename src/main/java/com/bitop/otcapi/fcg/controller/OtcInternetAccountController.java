@@ -2,7 +2,7 @@ package com.bitop.otcapi.fcg.controller;
 
 import com.bitop.otcapi.fcg.entity.req.InternetAccountReqDto;
 import com.bitop.otcapi.fcg.entity.resp.InternetAccountRespDto;
-import com.bitop.otcapi.fcg.service.InternetAccountService;
+import com.bitop.otcapi.fcg.service.OtcInternetAccountService;
 import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.response.ResponseList;
 import io.swagger.annotations.Api;
@@ -15,13 +15,13 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@Api(tags = "OTC模块-网络账号")
+@Api(tags = "OTC-网络账号模块")
 @RequestMapping("/otc/internetaccount")
 public class OtcInternetAccountController  {
 
 
     @Autowired
-    private InternetAccountService internetAccountService;
+    private OtcInternetAccountService internetAccountService;
 
     @ApiOperation(value = "网络账号列表")
 //    @AuthToken

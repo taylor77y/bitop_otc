@@ -4,11 +4,10 @@
 
 
     <update id="updateStatusById">
-		UPDATE otc_coin_type
+		UPDATE otc_internet_account
 		SET
 			`status`= #{status}
 		WHERE `id`= #{id}
 	</update>
-
 
 </mapper>

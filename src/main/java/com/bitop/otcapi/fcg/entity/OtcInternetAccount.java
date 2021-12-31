@@ -25,7 +25,7 @@ import java.io.Serializable;
 @TableName("otc_internet_account")
 @ApiModel(value="InternetAccount对象", description="网络账号表")
 //@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class InternetAccount extends BaseEntity implements Serializable {
+public class OtcInternetAccount extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

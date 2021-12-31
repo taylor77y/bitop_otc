@@ -1,14 +1,14 @@
 package com.bitop.otcapi.fcg.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.bitop.otcapi.fcg.entity.InternetAccount;
+import com.bitop.otcapi.fcg.entity.OtcInternetAccount;
 import com.bitop.otcapi.fcg.entity.req.InternetAccountReqDto;
 import com.bitop.otcapi.fcg.entity.resp.InternetAccountRespDto;
 import com.bitop.otcapi.response.Response;
 
 import java.util.List;
 
-public interface InternetAccountService extends IService<InternetAccount> {
+public interface OtcInternetAccountService extends IService<OtcInternetAccount> {
 
     /***
      * @Description: 添加/修改 网络账号信息
