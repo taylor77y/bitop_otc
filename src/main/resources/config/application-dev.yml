@@ -1,0 +1,159 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+#
+# This configuration overrides the application.yml file.
+#
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+server:
+    port: 8080
+
+
+logging:
+    level:
+        ROOT: DEBUG
+        org.springframework: DEBUG
+        com.bitop.otcapi: DEBUG
+openapi:
+    url:
+        huobi: https://api.huobi.pro/v1/common/currencys
+        binance: https://p2p.binance.com/bapi/c2c/v1/public/c2c/trade-rule/fiat-list
+
+spring:
+    profiles:
+        active: dev
+        include:
+            - swagger
+            # Uncomment to activate TLS for the dev profile
+            #- tls
+    devtools:
+        restart:
+            enabled: true
+        livereload:
+            enabled: false # we use Webpack dev server + BrowserSync for livereload
+    jackson:
+        serialization:
+            indent-output: true
+
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        druid: # 全局druid参数，绝大部分值和默认保持一致。(现已支持的参数如下,不清楚含义不要乱设置)
+            master:
+                url: jdbc:mysql://127.0.0.1:3306/bitop?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=Asia/Shanghai
+                username: root
+                password: root
+            # 连接池的配置信息
+            # 初始化大小，最小，最大
+            initialSize: 5
+            minIdle: 10
+            maxActive: 30
+            # 配置获取连接等待超时的时间
+            maxWait: 60000
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            timeBetweenEvictionRunsMillis: 60000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒
+            minEvictableIdleTimeMillis: 300000
+            maxEvictableIdleTimeMillis: 900000
+            validationQuery: SELECT 1 FROM DUAL
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            # 打开PSCache，并且指定每个连接上PSCache的大小
+            poolPreparedStatements: true
+            maxPoolPreparedStatementPerConnectionSize: 20
+            webStatFilter:
+                enabled: true
+            statViewServlet:
+                enabled: true
+                allow:
+                url-pattern: /druid/*
+                login-username:
+                login-password:
+            filter:
+                stat:
+                    enabled: true
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true
+            # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+            connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+
+    liquibase:
+        contexts: dev
+    mail:
+        host: localhost
+        port: 25
+        username:
+        password:
+    messages:
+        cache-duration: PT1S # 1 second, see the ISO 8601 standard
+    thymeleaf:
+        cache: false
+    sleuth:
+        sampler:
+            probability: 1 # report 100% of traces
+    zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
+        base-url: http://localhost:9411
+        enabled: false
+        locator:
+            discovery:
+                enabled: true
+    aop:
+        auto: true
+    resources:
+        static-locations: classpath:/static-dev/,classpath:/static/
+
+
+mybatis-plus:
+    configuration:
+        cache-enabled: true
+        use-generated-keys: true
+        default-executor-type: reuse
+        #log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+        #开启SQL语句打印
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+        #自动驼峰命名
+        map-underscore-to-camel-case: true
+
+    mapper-locations: classpath*:com/bitop/otcapi/fcg/mapper/impl/*Mapper.xml
+    global-config:
+        db-config:
+            #主键类型  0:"数据库ID自增",1:"该类型为未设置主键类型", 2:"用户输入ID",3:"全局唯一ID (数字类型唯一ID)", 4:"全局唯一ID UUID",5:"字符串全局唯一ID (idWorker 的字符串表示)";
+            id-type: ASSIGN_ID
+            # 默认数据库表下划线命名
+            table-underline: true
+            logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+            logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+    # 配置mybatis 数据返回类型别名（默认别名为类名）
+    type-aliases-package: com.bitop.otcapi.fcg.entity
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+
+
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the ApplicationProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# application:
