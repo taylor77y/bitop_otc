@@ -6,15 +6,20 @@ import com.bitop.otcapi.constant.PaymentMethod;
 import com.bitop.otcapi.context.ContextHandler;
 import com.bitop.otcapi.fcg.entity.OtcPaymentMethod;
 import com.bitop.otcapi.fcg.entity.req.PaymentMethodReqDto;
+import com.bitop.otcapi.fcg.mapper.OtcBankCardMapper;
 import com.bitop.otcapi.fcg.mapper.OtcPaymentMethodMapper;
 import com.bitop.otcapi.fcg.service.OtcPaymentMethodService;
 import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.util.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 @Service
 public class OtcPaymentMethodServiceImpl extends ServiceImpl<OtcPaymentMethodMapper, OtcPaymentMethod> implements OtcPaymentMethodService {
+
+    @Autowired
+    private OtcPaymentMethodMapper otcPaymentMethodMapper;
 
     /**
      * @param paymentMethodReqDto
@@ -48,9 +53,10 @@ public class OtcPaymentMethodServiceImpl extends ServiceImpl<OtcPaymentMethodMap
             if (integer != 0) {
                 return Response.error("每种支付方式只能上传一种");
             }
-            baseMapper.insert(paymentInfo);
+            //            必须勾选 mysql中表主键id 为 自动递增
+            otcPaymentMethodMapper.save(paymentInfo);
         } else {//修改
-            baseMapper.updateById(paymentInfo);
+            otcPaymentMethodMapper.updateById(paymentInfo);
         }
         return Response.success();
     }

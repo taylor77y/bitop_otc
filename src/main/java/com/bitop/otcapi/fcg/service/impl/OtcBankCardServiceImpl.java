@@ -7,10 +7,12 @@ import com.bitop.otcapi.fcg.entity.OtcBankCard;
 import com.bitop.otcapi.fcg.entity.req.BankCardReqDto;
 import com.bitop.otcapi.fcg.entity.resp.BankCardRespDto;
 import com.bitop.otcapi.fcg.mapper.OtcBankCardMapper;
+import com.bitop.otcapi.fcg.mapper.OtcInternetAccountMapper;
 import com.bitop.otcapi.fcg.service.OtcBankCardService;
 import com.bitop.otcapi.response.Response;
 
 import com.bitop.otcapi.util.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -18,6 +20,9 @@ import java.util.List;
 
 @Service
 public class OtcBankCardServiceImpl extends ServiceImpl<OtcBankCardMapper, OtcBankCard> implements OtcBankCardService {
+
+    @Autowired
+    private OtcBankCardMapper otcBankCardMapper;
 
     @Override
     public List<BankCardRespDto> userBankCardList(String userId) {
@@ -34,11 +39,10 @@ public class OtcBankCardServiceImpl extends ServiceImpl<OtcBankCardMapper, OtcBa
         BeanUtils.copyProperties(paymentBank,bankCardReqDto);
         paymentBank.setUserId(userId);
         if (StringUtils.isEmpty(bankCardReqDto.getId())){
-//            userWalletAddr.setCreateBy(userId);
-            baseMapper.insert(paymentBank);
+//            必须勾选 mysql中表主键id 为 自动递增
+            otcBankCardMapper.save(paymentBank);
         }else {
-//            userWalletAddr.setUpdateBy(userId);
-            baseMapper.updateById(paymentBank);
+            otcBankCardMapper.updateById(paymentBank);
         }
         return Response.success();
     }
