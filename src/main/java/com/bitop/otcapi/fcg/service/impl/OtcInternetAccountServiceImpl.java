@@ -13,6 +13,7 @@ import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -40,15 +41,16 @@ public class OtcInternetAccountServiceImpl extends ServiceImpl<OtcInternetAccoun
 
 
     @Override
+    @Transactional
     public Response addOrUpdateInternetAccount(InternetAccountReqDto internetAccountReqDto) {
         String userId = ContextHandler.getUserId();
         OtcInternetAccount internetAccount = new OtcInternetAccount();
         BeanUtils.copyProperties(internetAccountReqDto,internetAccount);
         internetAccount.setUserId(userId);
         if (StringUtils.isEmpty(internetAccountReqDto.getId())){
-            baseMapper.insert(internetAccount);
+            otcInternetAccountMapper.save(internetAccount);
         }else {
-            baseMapper.updateById(internetAccount);
+            otcInternetAccountMapper.updateById(internetAccount);
         }
         return Response.success();
     }

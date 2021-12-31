@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bitop.otcapi.fcg.mapper.OtcBankCardMapper">
+
+
+    <insert id="save" parameterType="com.bitop.otcapi.fcg.entity.OtcBankCard" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		INSERT INTO otc_bank_card (
+			bank_name,
+			bank_code,
+			number,
+			status
+		) VALUES (
+			#{bankName},
+			#{bankCode},
+			#{number},
+			#{status}
+		);
+	</insert>
+
+    <update id="updateById" parameterType="com.bitop.otcapi.fcg.entity.OtcBankCard" >
+        UPDATE otc_bank_card
+        SET
+        <if test="bankName != null and bankName != ''">
+            bank_name = #{bankName},
+        </if>
+        <if test="bankCode != null and bankCode != ''">
+            bank_code = #{bankCode},
+        </if>
+        <if test="number != null and number != ''">
+            number = #{number},
+        </if>
+        <if test="status != null and status != ''">
+            status = #{status}
+        </if>
+
+        WHERE `id`= #{id}
+    </update>
+
+
+    <update id="updateStatusById">
+		UPDATE otc_bank_card
+		SET
+			`status`= #{status}
+		WHERE `id`= #{id}
+	</update>
+
+
+</mapper>

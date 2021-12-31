@@ -1,7 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bitop.otcapi.fcg.mapper.OtcCoinTypeMapper">
+<mapper namespace="com.bitop.otcapi.fcg.mapper.OtcInternetAccountMapper">
 
+	<!--
+    新增
+    useGenerateKeys:是否产生主键id
+    keyColumn:数据库对应的列
+    keyProperty:domain中的属性
+
+    要产生主键
+    把数据库中id这一列对应的
+    数据中domain中对应的属性字段
+    -->
+	<insert id="save" parameterType="com.bitop.otcapi.fcg.entity.OtcInternetAccount" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		INSERT INTO otc_internet_account (
+			internet_account_name,
+			internet_account_number,
+			internet_account_type,
+			status
+		) VALUES (
+			#{internetAccountName},
+			#{internetAccountNumber},
+			#{internetAccountType},
+			#{status}
+		);
+	</insert>
+
+	<update id="updateById" parameterType="com.bitop.otcapi.fcg.entity.OtcInternetAccount" >
+		UPDATE otc_internet_account
+		SET
+		<if test="internetAccountName != null and internetAccountName != ''">
+			internet_account_name = #{internetAccountName},
+		</if>
+		<if test="internetAccountNumber != null and internetAccountNumber != ''">
+			internet_account_number = #{internetAccountNumber},
+		</if>
+		<if test="internetAccountType != null and internetAccountType != ''">
+			internet_account_type = #{internetAccountType},
+		</if>
+		<if test="status != null and status != ''">
+			status = #{status}
+		</if>
+
+		WHERE `id`= #{id}
+	</update>
 
     <update id="updateStatusById">
 		UPDATE otc_internet_account

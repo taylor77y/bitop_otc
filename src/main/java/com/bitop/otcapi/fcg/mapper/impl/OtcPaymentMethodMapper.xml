@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bitop.otcapi.fcg.mapper.OtcPaymentMethodMapper">
+
+	<insert id="save" parameterType="com.bitop.otcapi.fcg.entity.OtcPaymentMethod" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		INSERT INTO otc_payment_method (
+			payment_method_id,
+			bank_name,
+			optional,
+			real_name,
+			account_number,
+			payment_qr_code,
+			status
+		) VALUES (
+			#{paymentMethodId},
+			#{bankName},
+			#{optional},
+			#{realName},
+			#{accountNumber},
+			#{paymentQrCode},
+			#{status}
+		);
+	</insert>
+
+	<update id="updateById" parameterType="com.bitop.otcapi.fcg.entity.OtcPaymentMethod" >
+		UPDATE otc_payment_method
+		SET
+		<if test="paymentMethodId != null and paymentMethodId != ''">
+			payment_method_id = #{paymentMethodId},
+		</if>
+		<if test="bankName != null and bankName != ''">
+			bank_name = #{bankName},
+		</if>
+		<if test="optional != null and optional != ''">
+			optional = #{optional},
+		</if>
+		<if test="realName != null and realName != ''">
+			real_name = #{realName}
+		</if>
+		<if test="accountNumber != null and accountNumber != ''">
+			account_number = #{accountNumber},
+		</if>
+		<if test="paymentQrCode != null and paymentQrCode != ''">
+			payment_qr_code = #{paymentQrCode},
+		</if>
+		<if test="status != null and status != ''">
+			status = #{status}
+		</if>
+
+		WHERE `id`= #{id}
+	</update>
+
+    <update id="updateStatusById">
+		UPDATE otc_payment_method
+		SET
+			`status`= #{status}
+		WHERE `id`= #{id}
+	</update>
+
+
+</mapper>

@@ -2,6 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bitop.otcapi.fcg.mapper.OtcCoinTypeMapper">
 
+	<insert id="save" parameterType="com.bitop.otcapi.fcg.entity.OtcCoinType" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		INSERT INTO otc_coin_type (
+			coin_name,
+			coin_full_name,
+			otc_fee_ratio,
+			max_amount,
+			min_amount,
+			otc_status,
+			status
+		) VALUES (
+			#{coinName},
+			#{coinFullName},
+			#{otcFeeRatio},
+			#{maxAmount},
+			#{minAmount},
+			#{otcStatus},
+			#{status}
+		);
+	</insert>
+
+	<update id="updateById" parameterType="com.bitop.otcapi.fcg.entity.OtcCoinType" >
+		UPDATE otc_coin_type
+		SET
+		<if test="coinName != null and coinName != ''">
+			coin_name = #{coinName},
+		</if>
+		<if test="coinFullName != null and coinFullName != ''">
+			coin_full_name = #{coinFullName},
+		</if>
+		<if test="otcFeeRatio != null and otcFeeRatio != ''">
+			otc_fee_ratio = #{otcFeeRatio},
+		</if>
+		<if test="maxAmount != null and maxAmount != ''">
+			max_amount = #{maxAmount},
+		</if>
+		<if test="minAmount != null and minAmount != ''">
+			min_amount = #{minAmount},
+		</if>
+		<if test="otcStatus != null and otcStatus != ''">
+			otc_status = #{otcStatus},
+		</if>
+		<if test="status != null and status != ''">
+			status = #{status}
+		</if>
+
+		WHERE `id`= #{id}
+	</update>
 
     <update id="updateStatusById">
 		UPDATE otc_coin_type

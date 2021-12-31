@@ -18,8 +18,8 @@ server:
 
 logging:
     level:
-        ROOT: DEBUG
-        org.springframework: DEBUG
+        ROOT: warn
+        org.springframework: warn
         com.bitop.otcapi: DEBUG
 openapi:
     url:
