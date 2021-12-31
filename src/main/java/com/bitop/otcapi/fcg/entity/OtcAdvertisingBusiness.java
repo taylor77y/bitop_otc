@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="OtcAdvertisingBusiness对象", description="otc交易账号信息")
+@ApiModel(value="OtcAdvertisingBusiness对象", description="OTC广告商户信息")
 @TableName("otc_advertising_business")
 public class OtcAdvertisingBusiness extends BaseEntity implements Serializable {
 

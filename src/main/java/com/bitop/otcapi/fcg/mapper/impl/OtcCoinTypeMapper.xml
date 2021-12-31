@@ -10,4 +10,29 @@
 		WHERE `id`= #{id}
 	</update>
 
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO xxl_job_user (
+			username,
+			password,
+			role,
+			permission
+		) VALUES (
+			#{username},
+			#{password},
+			#{role},
+			#{permission}
+		);
+	</insert>
+
+	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >
+		UPDATE xxl_job_user
+		SET
+		<if test="password != null and password != ''">
+			password = #{password},
+		</if>
+		role = #{role},
+		permission = #{permission}
+		WHERE id = #{id}
+	</update>
+
 </mapper>
