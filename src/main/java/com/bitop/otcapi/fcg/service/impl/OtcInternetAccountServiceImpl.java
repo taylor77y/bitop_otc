@@ -6,7 +6,6 @@ import com.bitop.otcapi.context.ContextHandler;
 import com.bitop.otcapi.fcg.entity.OtcInternetAccount;
 import com.bitop.otcapi.fcg.entity.req.InternetAccountReqDto;
 import com.bitop.otcapi.fcg.entity.resp.InternetAccountRespDto;
-import com.bitop.otcapi.fcg.mapper.OtcCoinTypeMapper;
 import com.bitop.otcapi.fcg.mapper.OtcInternetAccountMapper;
 import com.bitop.otcapi.fcg.service.OtcInternetAccountService;
 import com.bitop.otcapi.response.Response;

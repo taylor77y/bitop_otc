@@ -11,6 +11,7 @@ import com.bitop.otcapi.fcg.mapper.OtcPaymentMethodMapper;
 import com.bitop.otcapi.fcg.service.OtcPaymentMethodService;
 import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.util.BeanUtils;
+import com.bitop.otcapi.util.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -32,11 +33,11 @@ public class OtcPaymentMethodServiceImpl extends ServiceImpl<OtcPaymentMethodMap
     public Response alipayPaymentMethod(PaymentMethodReqDto paymentMethodReqDto) {
         if (paymentMethodReqDto.getPaymentMethodId() == PaymentMethod.BANK.getCode()) {
             if (StringUtils.isEmpty(paymentMethodReqDto.getBankName())) {
-                return Response.error("请输入银行名称");
+                return Response.error(MessageUtils.message("请输入银行名称"));
             }
         } else {
             if (StringUtils.isEmpty(paymentMethodReqDto.getPaymentQrCode())) {
-                return Response.error("请先上传支付二维码");
+                return Response.error(MessageUtils.message("请先上传支付二维码"));
             }
         }
         String userId = ContextHandler.getUserId();
@@ -51,7 +52,7 @@ public class OtcPaymentMethodServiceImpl extends ServiceImpl<OtcPaymentMethodMap
             lambdaQueryWrapper.eq(OtcPaymentMethod::getPaymentMethodId, paymentMethodReqDto.getPaymentMethodId());
             Integer integer = baseMapper.selectCount(lambdaQueryWrapper);
             if (integer != 0) {
-                return Response.error("每种支付方式只能上传一种");
+                return Response.error(MessageUtils.message("每种支付方式只能上传一种"));
             }
             //            必须勾选 mysql中表主键id 为 自动递增
             otcPaymentMethodMapper.save(paymentInfo);

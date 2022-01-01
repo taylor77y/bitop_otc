@@ -16,4 +16,6 @@ public interface OtcCoinTypeService extends IService<OtcCoinType>  {
 //    List<OtcCoinType> fiatList();
 
     List<OtcCoinType> fiatListFromBinance();
+
+    boolean statusService(OtcCoinType coinType,Integer type);
 }

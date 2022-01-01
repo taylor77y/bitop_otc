@@ -1,6 +1,7 @@
 package com.bitop.otcapi.fcg.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bitop.otcapi.constant.CoinConstant;
 import com.bitop.otcapi.fcg.entity.OtcCoinType;
 import com.bitop.otcapi.fcg.mapper.OtcCoinTypeMapper;
 import com.bitop.otcapi.fcg.service.OtcCoinTypeService;
@@ -100,5 +101,24 @@ public class OtcCoinTypeServiceImpl extends ServiceImpl<OtcCoinTypeMapper, OtcCo
             return Collections.emptyList();
         }
         return (List<OtcCoinType>)transferResponseMap.get("data");
+    }
+
+    @Override
+    public boolean statusService(OtcCoinType coinType,Integer type) {
+        if (type.equals(CoinConstant.OTC_STATUS)) {
+            if ("1".equals(coinType.getOtcStatus())) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        if (type.equals(CoinConstant.COIN_STATUS)) {
+            if ("1".equals(coinType.getStatus())) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 }

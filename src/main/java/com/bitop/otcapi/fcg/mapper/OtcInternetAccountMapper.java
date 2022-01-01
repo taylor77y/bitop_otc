@@ -3,6 +3,7 @@ package com.bitop.otcapi.fcg.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bitop.otcapi.fcg.entity.OtcInternetAccount;
 import com.bitop.otcapi.fcg.entity.req.InternetAccountReqDto;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -12,6 +13,7 @@ import com.bitop.otcapi.fcg.entity.req.InternetAccountReqDto;
  * @author taylor
  * @since 2021-12-03
  */
+@Mapper
 public interface OtcInternetAccountMapper extends BaseMapper<OtcInternetAccount> {
 
 
