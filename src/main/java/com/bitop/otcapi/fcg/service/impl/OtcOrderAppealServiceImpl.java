@@ -24,12 +24,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 @Service
 public class OtcOrderAppealServiceImpl extends ServiceImpl<OtcOrderAppealMapper, OtcOrderAppeal> implements OtcOrderAppealService {
 
     @Autowired
     private OtcOrderMatchService matchService;
+
+    @Autowired
+    private OtcOrderAppealMapper otcOrderAppealMapper;
 
     /**
      * 订单申诉
@@ -48,11 +52,8 @@ public class OtcOrderAppealServiceImpl extends ServiceImpl<OtcOrderAppealMapper,
         }
         String userId = ContextHandler.getUserId();
         //查询用户是否已申诉
-        LambdaQueryWrapper<OtcOrderAppeal> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(OtcOrderAppeal::getOrderMatchNo, appealReqDto.getOrderMatchNo());
-        lambdaQueryWrapper.eq(OtcOrderAppeal::getStatus, "1");
-        lambdaQueryWrapper.eq(OtcOrderAppeal::getUserId, userId);
-        if (baseMapper.selectCount(lambdaQueryWrapper) > 0) {
+        Integer exist = otcOrderAppealMapper.existAppealedByUserIdAndNo(appealReqDto.getOrderMatchNo(),"1",userId);
+        if(!ObjectUtils.isEmpty(exist)){
             return Response.error(MessageUtils.message("用户已申诉，等待处理"));
         }
         OtcOrderAppeal ezOtcOrderAppeal = new OtcOrderAppeal();
