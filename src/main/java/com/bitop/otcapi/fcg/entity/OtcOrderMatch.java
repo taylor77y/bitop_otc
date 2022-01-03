@@ -27,7 +27,7 @@ import lombok.EqualsAndHashCode;
 @TableName("otc_order_match")
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="EzOtcOrderMatch对象", description="OTC匹配订单")
-public class OtcOrderMatch implements Serializable {
+public class OtcOrderMatch extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
@@ -50,10 +50,10 @@ public class OtcOrderMatch implements Serializable {
     @ApiModelProperty(value = "广告发布订单用户id")
     private String otcOrderUserId;
 
-    @ApiModelProperty(value = "创建时间")
+/*    @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+    private Date createTime;*/
 
     @ApiModelProperty(value = "支付时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
