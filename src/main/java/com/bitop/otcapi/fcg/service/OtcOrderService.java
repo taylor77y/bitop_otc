@@ -9,4 +9,6 @@ public interface OtcOrderService extends IService<OtcOrder> {
 
     Response releaseAdvertisingOrder(OtcOrderReqDto otcOrderReqDto);
 
+    Response offShelfOrder(String orderNo);
+
 }
