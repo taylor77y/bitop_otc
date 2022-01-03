@@ -38,7 +38,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
     private OtcAdvertisingBusinessService advertisingBusinessService;
 
     @Autowired
-    private OtcCoinTypeService otcCoinTypeService;
+    private CoinTypeService coinTypeService;
 
     @Autowired
     private OtcConfigService otcConfigService;
@@ -61,10 +61,10 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         if (StringUtils.isEmpty(one.getSecurityPassword())) {
             return Response.error(MessageUtils.message("请先完善otc交易信息")).code(700);
         }
-        LambdaQueryWrapper<OtcCoinType> queryWrapper = new LambdaQueryWrapper<OtcCoinType>();
-        queryWrapper.eq(OtcCoinType::getCoinName, coinName);
-        OtcCoinType coinType = otcCoinTypeService.getOne(queryWrapper);//查询到币种
-        if (!otcCoinTypeService.statusService(coinType, CoinConstant.OTC_STATUS)) {
+        LambdaQueryWrapper<CoinType> queryWrapper = new LambdaQueryWrapper<CoinType>();
+        queryWrapper.eq(CoinType::getCoinName, coinName);
+        CoinType coinType = coinTypeService.getOne(queryWrapper);//查询到币种
+        if (!coinTypeService.statusService(coinType, CoinConstant.OTC_STATUS)) {
             throw new BaseException("此币种尚未开放交易");
         }
         BigDecimal amount = otcOrderReqDto.getTotalAmount();//发布数量

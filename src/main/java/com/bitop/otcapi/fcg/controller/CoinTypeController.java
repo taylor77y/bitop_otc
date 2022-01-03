@@ -1,8 +1,8 @@
 package com.bitop.otcapi.fcg.controller;
 
-import com.bitop.otcapi.fcg.entity.OtcCoinType;
+import com.bitop.otcapi.fcg.entity.CoinType;
 import com.bitop.otcapi.fcg.entity.SearchModel;
-import com.bitop.otcapi.fcg.service.OtcCoinTypeService;
+import com.bitop.otcapi.fcg.service.CoinTypeService;
 import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.response.ResponseList;
 import com.bitop.otcapi.response.ResponsePageList;
@@ -25,15 +25,15 @@ import javax.validation.Valid;
 @RestController
 @Api(tags = "OTC-币种模块")
 @RequestMapping("/otc/coin/type")
-public class OtcCoinTypeController {
+public class CoinTypeController {
 
     @Autowired
-    private OtcCoinTypeService otcCoinTypeService;
+    private CoinTypeService otcCoinTypeService;
 
     @ApiOperation(value = "币种列表")
     @PostMapping("/coinTypeList")
 //    @AuthToken
-    public ResponsePageList<OtcCoinType> coinTypeList(@RequestBody @Valid SearchModel<OtcCoinType> searchModel){
+    public ResponsePageList<CoinType> coinTypeList(@RequestBody @Valid SearchModel<CoinType> searchModel){
         return ResponsePageList.success(otcCoinTypeService.page(searchModel.getPage(), searchModel.getQueryModel()));
     }
 
@@ -42,7 +42,7 @@ public class OtcCoinTypeController {
     @PostMapping("updateCoinTypeConfig")
 //    @AuthToken
 //    @Log(title = "资产币种模块", logInfo ="币种模块", operatorType = OperatorType.MANAGE)
-    public Response updateOtcConfig(@RequestBody @Valid OtcCoinType type) {
+    public Response updateOtcConfig(@RequestBody @Valid CoinType type) {
         otcCoinTypeService.updateById(type);
         return Response.success();
     }
@@ -60,7 +60,7 @@ public class OtcCoinTypeController {
     @ApiOperation(value = "查询所有可用 coin 信息")
 //    @AuthToken
     @GetMapping("queryAllCoins")// 交易类型：在线购买、卖出
-    public ResponseList<OtcCoinType> queryAllCoins(){
+    public ResponseList<CoinType> queryAllCoins(){
 
         return ResponseList.success(otcCoinTypeService.queryAllCoinsFromHuobi());
     }
@@ -68,7 +68,7 @@ public class OtcCoinTypeController {
     @ApiOperation(value = "法币币种（抓取系统参数配置的法币）")
 //    @AuthToken
     @GetMapping("fiatList")
-    public ResponseList<OtcCoinType> fiatList(){
+    public ResponseList<CoinType> fiatList(){
         return ResponseList.success(otcCoinTypeService.fiatListFromBinance());
     }
 }

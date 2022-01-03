@@ -21,9 +21,9 @@ import java.math.BigDecimal;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("otc_coin_type")
-@ApiModel(value="coinType对象", description="币种类型表")
-public class OtcCoinType extends BaseEntity implements Serializable {
+@TableName("coin_type")
+@ApiModel(value="CoinType对象", description="币种类型表")
+public class CoinType extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

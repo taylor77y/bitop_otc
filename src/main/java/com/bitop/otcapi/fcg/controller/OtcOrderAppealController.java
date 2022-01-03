@@ -3,7 +3,6 @@ package com.bitop.otcapi.fcg.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.bitop.otcapi.fcg.entity.OtcOrderAppeal;
 import com.bitop.otcapi.fcg.entity.req.AppealReqDto;
-import com.bitop.otcapi.fcg.service.OtcCoinTypeService;
 import com.bitop.otcapi.fcg.service.OtcOrderAppealService;
 import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.response.ResponseList;

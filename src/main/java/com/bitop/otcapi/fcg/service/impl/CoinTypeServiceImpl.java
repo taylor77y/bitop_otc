@@ -2,9 +2,9 @@ package com.bitop.otcapi.fcg.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bitop.otcapi.constant.CoinConstant;
-import com.bitop.otcapi.fcg.entity.OtcCoinType;
-import com.bitop.otcapi.fcg.mapper.OtcCoinTypeMapper;
-import com.bitop.otcapi.fcg.service.OtcCoinTypeService;
+import com.bitop.otcapi.fcg.entity.CoinType;
+import com.bitop.otcapi.fcg.mapper.CoinTypeMapper;
+import com.bitop.otcapi.fcg.service.CoinTypeService;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class OtcCoinTypeServiceImpl extends ServiceImpl<OtcCoinTypeMapper, OtcCoinType> implements OtcCoinTypeService {
+public class CoinTypeServiceImpl extends ServiceImpl<CoinTypeMapper, CoinType> implements CoinTypeService {
 
     @Value("${openapi.url.huobi}")
     private String huobiUrl;
@@ -38,7 +38,7 @@ public class OtcCoinTypeServiceImpl extends ServiceImpl<OtcCoinTypeMapper, OtcCo
     private RestTemplate restTemplate;
 
     @Autowired
-    private OtcCoinTypeMapper otcCoinTypeMapper;
+    private CoinTypeMapper coinTypeMapper;
 
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -50,12 +50,12 @@ public class OtcCoinTypeServiceImpl extends ServiceImpl<OtcCoinTypeMapper, OtcCo
 
     @Override
     public void updateCoinTypeStatusById(String id, String status){
-        otcCoinTypeMapper.updateStatusById(id,status);
+        coinTypeMapper.updateStatusById(id,status);
     }
 
 
     @Override
-    public List<OtcCoinType> queryAllCoinsFromHuobi() {
+    public List<CoinType> queryAllCoinsFromHuobi() {
 
         ResponseEntity<String> response = restTemplate.getForEntity(huobiUrl, String.class);
         String transferResponse = response.getBody();
@@ -68,7 +68,7 @@ public class OtcCoinTypeServiceImpl extends ServiceImpl<OtcCoinTypeMapper, OtcCo
             log.error("Failed to convert json to map", e);
             return Collections.emptyList();
         }
-        return (List<OtcCoinType>)transferResponseMap.get("data");
+        return (List<CoinType>)transferResponseMap.get("data");
     }
 
     /**
@@ -78,7 +78,7 @@ public class OtcCoinTypeServiceImpl extends ServiceImpl<OtcCoinTypeMapper, OtcCo
      * @return
      */
     @Override
-    public List<OtcCoinType> fiatListFromBinance() {
+    public List<CoinType> fiatListFromBinance() {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -100,11 +100,11 @@ public class OtcCoinTypeServiceImpl extends ServiceImpl<OtcCoinTypeMapper, OtcCo
             log.error("Failed to convert json to map", e);
             return Collections.emptyList();
         }
-        return (List<OtcCoinType>)transferResponseMap.get("data");
+        return (List<CoinType>)transferResponseMap.get("data");
     }
 
     @Override
-    public boolean statusService(OtcCoinType coinType,Integer type) {
+    public boolean statusService(CoinType coinType,Integer type) {
         if (type.equals(CoinConstant.OTC_STATUS)) {
             if ("1".equals(coinType.getOtcStatus())) {
                 return false;
