@@ -13,6 +13,7 @@ import com.bitop.otcapi.fcg.entity.req.PlaceOrderReqDto;
 import com.bitop.otcapi.fcg.entity.resp.PaymentDetailsRespDto;
 import com.bitop.otcapi.fcg.entity.vo.BalanceChange;
 import com.bitop.otcapi.fcg.mapper.OtcOrderMapper;
+import com.bitop.otcapi.fcg.mapper.OtcOrderMatchMapper;
 import com.bitop.otcapi.fcg.service.*;
 import com.bitop.otcapi.manager.AsyncManager;
 import com.bitop.otcapi.manager.factory.AsyncFactory;
@@ -26,13 +27,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -74,6 +73,9 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
 
     @Autowired
     private WebSocketService webSocketService;
+
+    @Autowired
+    private OtcOrderMatchMapper orderMatchMapper;
 
 
     /**
@@ -236,14 +238,17 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         PaymentDetailsRespDto details = new PaymentDetailsRespDto();
 
         //查看用户是否有未完成的订单
-        LambdaQueryWrapper<OtcOrderMatch> matchLambdaQueryWrapper = Wrappers.<OtcOrderMatch>lambdaQuery().
-                eq(OtcOrderMatch::getUserId, userId).eq(OtcOrderMatch::getType, ezOtcOrder.getType())
-                .and(wq -> wq.eq(OtcOrderMatch::getStatus, MatchOrderStatus.PENDINGORDER.getCode())
-                        .or().eq(OtcOrderMatch::getStatus, MatchOrderStatus.WAITFORPAYMENT.getCode())
-                        .or().eq(OtcOrderMatch::getStatus, MatchOrderStatus.PAID.getCode())
-                        .or().eq(OtcOrderMatch::getStatus, MatchOrderStatus.APPEALING.getCode()));
-        OtcOrderMatch orderMatch = orderMatchService.getOne(matchLambdaQueryWrapper);//匹配订单是否有未完成
-        if (null != orderMatch) {
+//        LambdaQueryWrapper<OtcOrderMatch> matchLambdaQueryWrapper = Wrappers.<OtcOrderMatch>lambdaQuery().
+//                eq(OtcOrderMatch::getUserId, userId).eq(OtcOrderMatch::getType, ezOtcOrder.getType())
+//                .and(wq -> wq.eq(OtcOrderMatch::getStatus, MatchOrderStatus.PENDINGORDER.getCode())
+//                        .or().eq(OtcOrderMatch::getStatus, MatchOrderStatus.WAITFORPAYMENT.getCode())
+//                        .or().eq(OtcOrderMatch::getStatus, MatchOrderStatus.PAID.getCode())
+//                        .or().eq(OtcOrderMatch::getStatus, MatchOrderStatus.APPEALING.getCode()));
+//        OtcOrderMatch orderMatch = orderMatchService.getOne(matchLambdaQueryWrapper);//匹配订单是否有未完成
+        String[] statusArray = {MatchOrderStatus.PENDINGORDER.getCode(),MatchOrderStatus.WAITFORPAYMENT.getCode(),
+                MatchOrderStatus.PAID.getCode(),MatchOrderStatus.APPEALING.getCode()};
+        OtcOrderMatch orderMatch = orderMatchMapper.existNnfinishedOrderByTypeAndStatus(userId,ezOtcOrder.getType(),statusArray);
+        if (!ObjectUtils.isEmpty(orderMatch)) {
             BeanUtils.copyProperties(orderMatch, details);
             details.setNowTime(new Date());
             LambdaQueryWrapper<OtcOrderPayment> paymentLambdaQueryWrapper = new LambdaQueryWrapper<>();

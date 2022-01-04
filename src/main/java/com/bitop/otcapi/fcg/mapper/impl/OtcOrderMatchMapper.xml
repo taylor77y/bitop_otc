@@ -3,35 +3,41 @@
 <mapper namespace="com.bitop.otcapi.fcg.mapper.OtcOrderMatchMapper">
 
     <sql id="Base_Column_List">
-		t.id,
-		t.user_id,
-		t.type,
-		t.reason,
-		t.voucher,
 		t.order_match_no,
-		t.status,
-		t.examine_by,
-		t.memo,
-		t.create_by,
+		t.user_id,
+		t.match_advertising_name,
+		t.fee,
+		t.order_no,
+		t.otc_order_user_id,
 		t.create_time,
-		t.update_by,
-		t.update_time,
-		t.remark
+		t.payment_time,
+		t.finish_time,
+		t.advertising_name,
+		t.amount,
+		t.total_price,
+		t.price,
+		t.currency_code,
+		t.status,
+		t.coin_name,
+		t.due_time,
+		t.version
 	</sql>
 
-    <select id="existNnfinishedOrderByTypeAndStatus" parameterType="java.util.HashMap" resultType="int">
-        SELECT 1
+    <select id="existNnfinishedOrderByTypeAndStatus" parameterType="java.util.HashMap" resultType="com.bitop.otcapi.fcg.entity.OtcOrderMatch">
+        SELECT <include refid="Base_Column_List" />
         FROM otc_order_match AS t
         <trim prefix="WHERE" prefixOverrides="AND | OR" >
             <if test="userId != null and userId != ''">
                 AND t.user_id = #{userId}
             </if>
-            <if test="orderMatchNo != null and orderMatchNo != ''">
-                AND t.order_match_no = #{orderMatchNo}
+            <if test="type != null and type != ''">
+                AND t.type = #{type}
             </if>
-            <if test="userId != status and status != ''">
-                AND t.status = #{status}
-            </if>
+                AND
+            <!-- TODO in 查询数据量大的时候可能会报错 -->
+            <foreach collection="statusArray" item="item" open="t.status IN (" close=")" separator="," >
+                #{item}
+            </foreach>
         </trim> limit 1
     </select>
 
