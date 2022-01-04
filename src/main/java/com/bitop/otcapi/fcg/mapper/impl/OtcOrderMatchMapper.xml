@@ -23,7 +23,7 @@
 		t.version
 	</sql>
 
-    <select id="existNnfinishedOrderByTypeAndStatus" parameterType="java.util.HashMap" resultType="com.bitop.otcapi.fcg.entity.OtcOrderMatch">
+    <select id="existUnfinishedOrderByTypeAndStatus" parameterType="java.util.HashMap" resultType="com.bitop.otcapi.fcg.entity.OtcOrderMatch">
         SELECT <include refid="Base_Column_List" />
         FROM otc_order_match AS t
         <trim prefix="WHERE" prefixOverrides="AND | OR" >
@@ -40,6 +40,21 @@
             </foreach>
         </trim> limit 1
     </select>
+
+	<select id="existUnfinishedOrderByNoAndStatus" parameterType="java.util.HashMap" resultType="com.bitop.otcapi.fcg.entity.OtcOrderMatch">
+		SELECT <include refid="Base_Column_List" />
+		FROM otc_order_match AS t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="orderNo != null and orderNo != ''">
+				AND t.order_no = #{orderNo}
+			</if>
+			AND
+			<!-- TODO in 查询数据量大的时候可能会报错 -->
+			<foreach collection="statusArray" item="item" open="t.status IN (" close=")" separator="," >
+				#{item}
+			</foreach>
+		</trim> limit 1
+	</select>
 
 
 </mapper>

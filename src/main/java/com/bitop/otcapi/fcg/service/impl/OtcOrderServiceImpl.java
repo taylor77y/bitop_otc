@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -76,6 +77,10 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
 
     @Autowired
     private OtcOrderMatchMapper orderMatchMapper;
+
+
+    final static String[] statusArray = {MatchOrderStatus.PENDINGORDER.getCode(),MatchOrderStatus.WAITFORPAYMENT.getCode(),
+            MatchOrderStatus.PAID.getCode(),MatchOrderStatus.APPEALING.getCode()};
 
 
     /**
@@ -158,6 +163,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         //存入新的订单
         baseMapper.insert(ezOtcOrder);
         //给用户一个新订单信号
+//        WebSocketHandle.nowOrder();
         webSocketService.nowOrder();
         return Response.success();
     }
@@ -175,14 +181,15 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
     @Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)//value="transactionManager1",
     public Response offShelfOrder(String orderNo) {
         //根据订单号查询到是否存在未完成的订单
-        LambdaQueryWrapper<OtcOrderMatch> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(OtcOrderMatch::getOrderNo, orderNo).and(we -> we.eq(
-                OtcOrderMatch::getStatus, MatchOrderStatus.WAITFORPAYMENT.getCode()).or()
-                .eq(OtcOrderMatch::getStatus, MatchOrderStatus.PAID.getCode()).or()
-                .eq(OtcOrderMatch::getStatus, MatchOrderStatus.PENDINGORDER.getCode())
-                .eq(OtcOrderMatch::getStatus, MatchOrderStatus.APPEALING.getCode()));
-        List<OtcOrderMatch> list = orderMatchService.list(queryWrapper);
-        if (list.size() > 0) {
+//        LambdaQueryWrapper<OtcOrderMatch> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.eq(OtcOrderMatch::getOrderNo, orderNo).and(we -> we.eq(
+//                OtcOrderMatch::getStatus, MatchOrderStatus.WAITFORPAYMENT.getCode()).or()
+//                .eq(OtcOrderMatch::getStatus, MatchOrderStatus.PAID.getCode()).or()
+//                .eq(OtcOrderMatch::getStatus, MatchOrderStatus.PENDINGORDER.getCode())
+//                .eq(OtcOrderMatch::getStatus, MatchOrderStatus.APPEALING.getCode()));
+//        List<OtcOrderMatch> list = orderMatchService.list(queryWrapper);
+        List<OtcOrderMatch> list = orderMatchMapper.existUnfinishedOrderByNoAndStatus(orderNo,statusArray);
+        if (!CollectionUtils.isEmpty(list)) {
             return Response.error(MessageUtils.message("下架失败!有用户订单未完成,请先处理"));
         }
         //根据订单号查询到订单
@@ -245,9 +252,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
 //                        .or().eq(OtcOrderMatch::getStatus, MatchOrderStatus.PAID.getCode())
 //                        .or().eq(OtcOrderMatch::getStatus, MatchOrderStatus.APPEALING.getCode()));
 //        OtcOrderMatch orderMatch = orderMatchService.getOne(matchLambdaQueryWrapper);//匹配订单是否有未完成
-        String[] statusArray = {MatchOrderStatus.PENDINGORDER.getCode(),MatchOrderStatus.WAITFORPAYMENT.getCode(),
-                MatchOrderStatus.PAID.getCode(),MatchOrderStatus.APPEALING.getCode()};
-        OtcOrderMatch orderMatch = orderMatchMapper.existNnfinishedOrderByTypeAndStatus(userId,ezOtcOrder.getType(),statusArray);
+        OtcOrderMatch orderMatch = orderMatchMapper.existUnfinishedOrderByTypeAndStatus(userId,ezOtcOrder.getType(),statusArray);
         if (!ObjectUtils.isEmpty(orderMatch)) {
             BeanUtils.copyProperties(orderMatch, details);
             details.setNowTime(new Date());

@@ -5,8 +5,13 @@ import com.bitop.otcapi.fcg.entity.OtcOrderMatch;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface OtcOrderMatchMapper extends BaseMapper<OtcOrderMatch> {
 
-    OtcOrderMatch existNnfinishedOrderByTypeAndStatus(@Param("userId")String userId, @Param("type") String type, @Param("statusArray") String[] statusArray);
+    OtcOrderMatch existUnfinishedOrderByTypeAndStatus(@Param("userId")String userId, @Param("type") String type,
+                                                      @Param("statusArray") String[] statusArray);
+
+    List<OtcOrderMatch> existUnfinishedOrderByNoAndStatus(@Param("orderNo")String orderNo, @Param("statusArray") String[] statusArray);
 }
