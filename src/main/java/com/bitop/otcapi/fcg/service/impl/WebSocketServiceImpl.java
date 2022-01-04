@@ -26,6 +26,23 @@ public class WebSocketServiceImpl implements WebSocketService {
         }
     }
 
+    //订单状态变化
+/*    public static void orderStatusChange(String userId, String status) {
+        List<String> topicList = WebSocketFactory.userTopicMap.get(userId);
+        if (topicList != null && topicList.size() > 0) {
+            if (topicList.contains(TopicSocket.ODERSTATUS)) {
+                SendMessage sendMessage = new SendMessage();
+                sendMessage.setTopic(TopicSocket.ODERSTATUS);
+                sendMessage.setData(status);
+                WebSocketFactory.sendText(userId, JSON.toJSONString(sendMessage));
+            }
+        }else {
+            String message=String.format("【ezcoins】 %s。", "您的订单已发送变化，请前往查看");
+            send(userId, message);
+        }
+    }*/
+
+
     public void nowOrder(){
         SendMessage sendMessage = new SendMessage();
         sendMessage.setTopic(TopicSocket.NEWORDER);

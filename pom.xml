@@ -75,6 +75,12 @@
         </dependency>
 
 
+        <!--  RabbitMQ 依赖      -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
         <!--  knife4j -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>

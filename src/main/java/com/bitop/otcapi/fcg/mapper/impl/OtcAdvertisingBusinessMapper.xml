@@ -5,11 +5,11 @@
 
     <select id="existByAdvertisingName" resultType="java.lang.Integer">
         select 1 from otc_advertising_business
-        <where>
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
             <if test="advertisingName != null and advertisingName != ''">
                 and advertising_name = #{advertisingName}
             </if>
-        </where>
+        </trim>
         LIMIT 1
     </select>
 
