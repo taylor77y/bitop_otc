@@ -5,22 +5,26 @@ import com.bitop.otcapi.constant.*;
 import com.bitop.otcapi.context.ContextHandler;
 import com.bitop.otcapi.exception.AccountOperationBusyException;
 import com.bitop.otcapi.exception.BaseException;
+import com.bitop.otcapi.fcg.entity.CoinRecord;
 import com.bitop.otcapi.fcg.entity.OtcOrder;
 import com.bitop.otcapi.fcg.entity.OtcOrderMatch;
 import com.bitop.otcapi.fcg.entity.vo.BalanceChange;
 import com.bitop.otcapi.fcg.mapper.OtcOrderMatchMapper;
-import com.bitop.otcapi.fcg.service.CoinAccountService;
-import com.bitop.otcapi.fcg.service.OtcOrderMatchService;
-import com.bitop.otcapi.fcg.service.OtcOrderService;
+import com.bitop.otcapi.fcg.service.*;
 import com.bitop.otcapi.manager.AsyncManager;
 import com.bitop.otcapi.manager.factory.AsyncFactory;
 import com.bitop.otcapi.redis.RedisCache;
 import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.util.DateUtils;
 import com.bitop.otcapi.util.MessageUtils;
+import com.bitop.otcapi.websocket.WebSocketHandle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +41,12 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
 
     @Autowired
     private CoinAccountService accountService;
+
+    @Autowired
+    private CoinRecordService recordService;
+
+    @Autowired
+    private OtcUserService userService;
 
     /***
      * @Description: 用户 取消订单（两个状态可取消订单  1：接单广告（卖家未接受订单）用户免费取消
@@ -125,8 +135,8 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
      * @Description: 买家确认 付款
      * @Param: [matchOrderNo]
      * @return: com.ezcoins.response.BaseResponse
-     * @Author: Wanglei
-     * @Date: 2021/6/19
+     * @Author: taylor
+     * @Date: 2022/01/04
      */
     @Override
     public Response confirmPayment(String matchOrderNo) {
@@ -158,6 +168,194 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
         //TODO:存入消息
         AsyncManager.me().execute(AsyncFactory.sendSysChat(sellUserId, buyUserId, orderMatch.getOrderMatchNo(),
                 SysOrderConstants.SysChatMsg.PAYMENT_SUCCESS, MatchOrderStatus.PAID));
+        return Response.success();
+    }
+
+
+    /**
+     * @param matchOrderNo
+     * @Description: 卖家放款（放币）
+     * @Param: [matchOrderNo]
+     * @return: com.ezcoins.response.BaseResponse
+     * @Author: taylor
+     * @Date: 2022/01/04
+     */
+    @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)//value="transactionManager1",
+    public Response sellerPut(String matchOrderNo, boolean isAdmin) {
+        String userId = ContextHandler.getUserId();
+        Date nowDate = new Date();
+        OtcOrderMatch orderMatch = baseMapper.selectById(matchOrderNo);
+        //判断订单状态
+        if (!orderMatch.getStatus().equals(MatchOrderStatus.PAID.getCode())) {
+            throw new BaseException(MessageUtils.message("订单状态已发生变化"));
+        }
+        if (MatchOrderStatus.APPEALING.getCode().equals(orderMatch.getStatus()) && !isAdmin) {
+            return Response.error(MessageUtils.message("申诉中，不能放款"));
+        }
+        List<BalanceChange> cList = new ArrayList<>();
+        //匹配订单分为 买单 和 卖单  //查询到otc 订单
+        BigDecimal amount =orderMatch.getAmount();
+        BigDecimal totalAmount = amount.add(orderMatch.getFee());
+//        if (orderMatch.getOrderNo() == null) {//一键卖币放行
+//            //手续费计算
+//            BalanceChange b1 = new BalanceChange();
+//            b1.setCoinName(orderMatch.getCoinName());
+//            b1.setFrozen(totalAmount.negate());
+//            b1.setIncomeType(CoinConstants.IncomeType.PAYOUT.getType());
+//            b1.setMainType(CoinConstants.MainType.NORECORD.getType());
+//            b1.setUserId(userId);
+//            cList.add(b1);
+//            if (!accountService.balanceChangeSYNC(cList)) {// 资产变更异常
+//                throw new AccountOperationBusyException();
+//            }
+//            Record rec = new Record();
+//            rec.setUserId(userId);
+//            rec.setCoinName(orderMatch.getCoinName());
+//            rec.setFee(BigDecimal.ZERO);
+//            rec.setIncomeType(CoinConstants.IncomeType.PAYOUT.getType());
+//            rec.setMainType(CoinConstants.MainType.TRANSFEROUT.getType());
+//            rec.setSonType(RecordSonType.TRANSFER_OUT);
+//            rec.setStatus(CoinConstants.RecordStatus.OK.getStatus());
+//            rec.setAmount(totalAmount.negate());
+//            recordService.save(rec);
+//            WebSocketHandle.accountChange(userId, orderMatch.getCoinName(), amount, RecordSonType.TRANSFER_OUT);
+//
+//            orderMatch.setStatus(MatchOrderStatus.COMPLETED.getCode());
+//            orderMatch.setFinishTime(nowDate);
+//            baseMapper.updateById(orderMatch);
+//            //给用户一个信号
+//            WebSocketHandle.orderStatusChange(userId, MatchOrderStatus.COMPLETED.getCode());
+//            return Response.success();
+//        }
+        OtcOrder ezOtcOrder = otcOrderService.getById(orderMatch.getOrderNo());
+        //减少冻结的币
+        BigDecimal frozeAmount = ezOtcOrder.getFrozeAmount();
+        BalanceChange b1 = new BalanceChange();
+        b1.setCoinName(orderMatch.getCoinName());
+        b1.setFrozen(amount.negate());
+        b1.setIncomeType(CoinConstants.IncomeType.PAYOUT.getType());
+        b1.setMainType(CoinConstants.MainType.NORECORD.getType());
+        b1.setFee(BigDecimal.ZERO);
+        b1.setSonType(RecordSonType.TRANSFER_OUT);
+
+        BalanceChange b2 = new BalanceChange();
+        b2.setCoinName(orderMatch.getCoinName());
+        b2.setAvailable(amount);
+        b2.setIncomeType(CoinConstants.IncomeType.INCOME.getType());
+        b2.setMainType(CoinConstants.MainType.TRANSFERIN.getType());
+        b2.setFee(BigDecimal.ZERO);
+        b2.setSonType(RecordSonType.TRANSFER_IN);
+
+        String userName = ContextHandler.getUserName();
+        //改变OTC信息
+        String sellUserId = null;
+        String buyUserId = null;
+        boolean flag = false;
+        boolean flag1=false;
+        Date payTime = orderMatch.getPaymentTime();
+        if ("0".equals(ezOtcOrder.getType())) {//买单
+            if (isAdmin) {
+                userId = orderMatch.getUserId();
+                userName = userService.getById(userId).getUserName();
+            }
+            if (userId.equals(ezOtcOrder.getUserId())) {
+                throw new BaseException("订单错误");
+            }
+            b1.setUserId(userId);
+            cList.add(b1);
+            //将amount币存入买家的账户中
+            b2.setUserId(ezOtcOrder.getUserId());
+            cList.add(b2);
+            sellUserId = userId;
+            buyUserId = ezOtcOrder.getUserId();
+            //otc订单冻结币的剩余
+            BigDecimal subtract = ezOtcOrder.getTotalAmount().subtract(ezOtcOrder.getQuotaAmount());
+            if(ezOtcOrder.getMinimumLimit().compareTo(subtract) > 0){
+                flag1 = true;
+                ezOtcOrder.setStatus("1");
+                ezOtcOrder.setEndTime(new Date());
+                otcOrderService.updateById(ezOtcOrder);
+            }
+        } else if ("1".equals(ezOtcOrder.getType())) {  //卖单 需要广告商户进行放币
+            if (isAdmin) {
+                userId = ezOtcOrder.getUserId();
+                userName = userService.getById(userId).getUserName();
+            }
+            if (!userId.equals(ezOtcOrder.getUserId())) {
+                throw new BaseException("订单错误");
+            }
+            b1.setUserId(userId);//发布订单用户id
+            cList.add(b1);
+            //将amount币存入买家的账户中
+            b2.setUserId(orderMatch.getUserId());
+            cList.add(b2);
+            sellUserId = userId;
+            buyUserId = orderMatch.getUserId();
+
+            //otc订单冻结币的剩余
+            BigDecimal frozeNow = frozeAmount.subtract(amount);
+            ezOtcOrder.setFrozeAmount(frozeNow);
+            //如果冻结数量小于最新订单数量直接下架
+            if (ezOtcOrder.getMinimumLimit().compareTo(ezOtcOrder.getFrozeAmount()) > 0) {
+                flag = true;
+                //TODO: 将冻结数量返回商户的资产中
+                //解冻卖出的USDT
+                BalanceChange b = new BalanceChange();
+                b.setCoinName(ezOtcOrder.getCoinName());
+                b.setAvailable(ezOtcOrder.getFrozeAmount());//返回冻结的数量
+                b.setFrozen(ezOtcOrder.getFrozeAmount().negate());//解冻冻结的数量
+                b.setIncomeType(CoinConstants.IncomeType.INCOME.getType());
+                b.setUserId(ezOtcOrder.getUserId());
+                b.setMainType(CoinConstants.MainType.UNFREEZE.getType());
+                b.setSonType(RecordSonType.TRANSACTION_UNFREEZE);
+                b.setFee(BigDecimal.ZERO);
+                cList.add(b);
+                //改变订单状态
+                ezOtcOrder.setStatus("1");
+                ezOtcOrder.setEndTime(new Date());
+            }
+            otcOrderService.updateById(ezOtcOrder);
+        }
+
+        //改变订单状态
+        orderMatch.setStatus(MatchOrderStatus.COMPLETED.getCode());
+        orderMatch.setFinishTime(nowDate);
+        baseMapper.updateById(orderMatch);
+        if (!accountService.balanceChangeSYNC(cList)) {// 资产变更异常
+            throw new AccountOperationBusyException();
+        }
+        CoinRecord rec = new CoinRecord();
+        rec.setUserId(userId);
+        rec.setCoinName(ezOtcOrder.getCoinName());
+        rec.setFee(BigDecimal.ZERO);
+        rec.setIncomeType(CoinConstants.IncomeType.PAYOUT.getType());
+        rec.setMainType(CoinConstants.MainType.TRANSFEROUT.getType());
+        rec.setSonType(RecordSonType.TRANSFER_OUT);
+        rec.setStatus(CoinConstants.RecordStatus.OK.getStatus());
+        rec.setAmount(amount.negate());
+        rec.setCreateBy(userName);
+        recordService.save(rec);
+        WebSocketHandle.accountChange(rec.getUserId(), rec.getCoinName(), rec.getAmount(), rec.getSonType());
+
+        if (isAdmin) {
+            AsyncManager.me().execute(AsyncFactory.sendSysChat(sellUserId, buyUserId, orderMatch.getOrderMatchNo(),
+                    SysOrderConstants.SysChatMsg.APPEAL_PUT, MatchOrderStatus.COMPLETED));
+        } else {
+            AsyncManager.me().execute(AsyncFactory.sendSysChat(sellUserId, buyUserId, orderMatch.getOrderMatchNo(),
+                    SysOrderConstants.SysChatMsg.RELEASE_SUCCESS, MatchOrderStatus.COMPLETED));
+        }
+        AsyncManager.me().execute(AsyncFactory.updateCount(sellUserId, buyUserId, payTime, nowDate, isAdmin, "0"));
+        if (flag) {//系统下架提醒
+            AsyncManager.me().execute(AsyncFactory.StationLetter(ezOtcOrder.getUserId(),
+                    SysTipsConstants.TipsType.SYS_OFF_SHELF, ezOtcOrder.getOrderNo(),
+                    ezOtcOrder.getFrozeAmount().setScale(8).toString()));
+        }
+        if (flag1) {//系统下架提醒
+            AsyncManager.me().execute(AsyncFactory.StationLetter(ezOtcOrder.getUserId(),
+                    SysTipsConstants.TipsType.SYS_OFF_SHELF_BY, ezOtcOrder.getOrderNo()));
+        }
+
         return Response.success();
     }
 }

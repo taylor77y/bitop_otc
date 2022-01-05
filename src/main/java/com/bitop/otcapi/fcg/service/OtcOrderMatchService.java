@@ -23,4 +23,15 @@ public interface OtcOrderMatchService extends IService<OtcOrderMatch> {
      * @Date: 2022/01/04
      */
     Response confirmPayment(String matchOrderNo);
+
+    /**
+     * @Description: 卖家放款
+     * @Param: [matchOrderNo]
+     * @return: com.ezcoins.response.BaseResponse
+     * @Author: Wanglei
+     * @Date: 2021/6/19
+     */
+    Response sellerPut(String matchOrderNo,boolean isAdmin);
+
+
 }

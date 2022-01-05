@@ -7,4 +7,7 @@ import org.apache.ibatis.annotations.Param;
 public interface OtcAdvertisingBusinessMapper extends BaseMapper<OtcAdvertisingBusiness> {
 
     Integer existByAdvertisingName(@Param("advertisingName")String advertisingName);
+
+    //根据用户查询到OTC详情
+    OtcAdvertisingBusiness selectOneByUserId(@Param("userId")String userId);
 }

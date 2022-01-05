@@ -16,9 +16,9 @@ import com.bitop.otcapi.fcg.mapper.CoinAccountMapper;
 import com.bitop.otcapi.fcg.service.CoinAccountService;
 import com.bitop.otcapi.fcg.service.CoinRecordService;
 import com.bitop.otcapi.fcg.service.CoinTypeService;
-import com.bitop.otcapi.fcg.service.WebSocketService;
 import com.bitop.otcapi.redis.CacheUtils;
 import com.bitop.otcapi.util.SpringUtils;
+import com.bitop.otcapi.websocket.WebSocketHandle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -49,8 +49,6 @@ public class CoinAccountServiceImpl extends ServiceImpl<CoinAccountMapper, CoinA
     @Autowired
     private CacheUtils cacheUtils;
 
-    @Autowired
-    private WebSocketService webSocketService;
 
     @Override
     public boolean balanceChangeSYNC(List<BalanceChange> cList) throws AccountBalanceNotEnoughException, AccountOperationBusyException {
@@ -133,7 +131,7 @@ public class CoinAccountServiceImpl extends ServiceImpl<CoinAccountMapper, CoinA
                             rec.setAmount(c.getAvailable());
                             rec.setCreateBy(acc.getCreateBy());
                             recordService.save(rec);
-                            webSocketService.accountChange(c.getUserId(),c.getCoinName(),c.getAvailable(),c.getSonType());
+                            WebSocketHandle.accountChange(c.getUserId(),c.getCoinName(),c.getAvailable(),c.getSonType());
                         }
 
                     }

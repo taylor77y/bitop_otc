@@ -2,12 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bitop.otcapi.fcg.mapper.OtcAdvertisingBusinessMapper">
 
+    <sql id="Base_Column_List">
+		t.id,
+		t.user_id,
+		t.advertising_name,
+		t.security_password,
+		t.sell_count,
+		t.buy_count,
+		t.plus_v,
+		t.finish_rate,
+		t.finish_buy_rate,
+		t.average_pass,
+		t.create_time,
+		t.create_by,
+		t.update_time,
+		t.update_by,
+		t.version,
+		t.margin,
+		t.remark
+	</sql>
 
     <select id="existByAdvertisingName" resultType="java.lang.Integer">
         select 1 from otc_advertising_business
         <trim prefix="WHERE" prefixOverrides="AND | OR" >
             <if test="advertisingName != null and advertisingName != ''">
                 and advertising_name = #{advertisingName}
+            </if>
+        </trim>
+        LIMIT 1
+    </select>
+
+    <select id="selectOneByUserId" resultType="com.bitop.otcapi.fcg.entity.OtcAdvertisingBusiness">
+        select <include refid="Base_Column_List" /> from otc_advertising_business AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="userId != null and userId != ''">
+                and t.user_id = #{userId}
             </if>
         </trim>
         LIMIT 1

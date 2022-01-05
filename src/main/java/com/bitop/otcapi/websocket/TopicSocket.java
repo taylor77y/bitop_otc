@@ -1,5 +1,4 @@
-package com.bitop.otcapi.constant;
-
+package com.bitop.otcapi.websocket;
 /**
  * topic统一管理
  */

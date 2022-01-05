@@ -22,6 +22,7 @@ import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.util.BeanUtils;
 import com.bitop.otcapi.util.DateUtils;
 import com.bitop.otcapi.util.MessageUtils;
+import com.bitop.otcapi.websocket.WebSocketHandle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -71,9 +72,6 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
 
     @Autowired
     private OtcOrderMatchService orderMatchService;
-
-    @Autowired
-    private WebSocketService webSocketService;
 
     @Autowired
     private OtcOrderMatchMapper orderMatchMapper;
@@ -163,8 +161,8 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         //存入新的订单
         baseMapper.insert(ezOtcOrder);
         //给用户一个新订单信号
-//        WebSocketHandle.nowOrder();
-        webSocketService.nowOrder();
+        WebSocketHandle.nowOrder();
+//        webSocketService.nowOrder();
         return Response.success();
     }
 
@@ -407,12 +405,9 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
                     SysOrderConstants.SysChatMsg.SELL_PLACE_ORDER, MatchOrderStatus.WAITFORPAYMENT));
         }
 
-//        webSocketService.orderStatusChange(sellUserId, status.getCode());
-//        webSocketService.orderStatusChange(buyUserId, status.getCode());
-
         //给用户一个信号
-//        webSocketService.otherAuthentication(ezOtcOrder.getUserId(),ezOtcOrder.getType(),
-//                placeOrderReqDto.getAmount()+ezOtcOrder.getCoinName());
+        WebSocketHandle.otherAuthentication(ezOtcOrder.getUserId(),ezOtcOrder.getType(),
+                placeOrderReqDto.getAmount()+ezOtcOrder.getCoinName());
 
         //返回订单
         return Response.success(MessageUtils.message("下单成功"), details);//将订单返回

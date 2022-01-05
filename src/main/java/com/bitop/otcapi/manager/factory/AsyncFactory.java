@@ -5,11 +5,14 @@ import com.bitop.otcapi.constant.SysOrderConstants;
 import com.bitop.otcapi.constant.SysTipsConstants;
 import com.bitop.otcapi.fcg.entity.OtcChatMsg;
 import com.bitop.otcapi.fcg.entity.SysTips;
+import com.bitop.otcapi.fcg.service.OtcAdvertisingBusinessService;
 import com.bitop.otcapi.fcg.service.OtcChatMsgService;
 import com.bitop.otcapi.fcg.service.SysTipsService;
 import com.bitop.otcapi.util.SpringUtils;
+import com.bitop.otcapi.websocket.WebSocketHandle;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -49,12 +52,26 @@ public class AsyncFactory {
         list.add(otcChatMsg_sell);
         list.add(otcChatMsg_buy);
         //给用户一个信号
-//        WebSocketHandle.orderStatusChange(sellUserId, status.getCode());
-//        WebSocketHandle.orderStatusChange(buyUserId, status.getCode());
+        WebSocketHandle.orderStatusChange(sellUserId, status.getCode());
+        WebSocketHandle.orderStatusChange(buyUserId, status.getCode());
         return new TimerTask(){
             @Override
             public void run(){
                 SpringUtils.getBean(OtcChatMsgService.class).sendSysChat(list,null);
+            }
+        };
+    }
+
+
+    /**
+     * 修改商户卖单买单
+     */
+    public static TimerTask updateCount(String sellUserId, String buyUserId, Date payTime, Date finishTime, boolean isAdmin, String status) {
+        return new TimerTask(){
+            @Override
+            public void run(){
+                SpringUtils.getBean(OtcAdvertisingBusinessService.class)
+                        .updateCount(sellUserId,buyUserId,payTime,finishTime,isAdmin,status);
             }
         };
     }
