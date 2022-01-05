@@ -12,7 +12,7 @@ import javax.websocket.server.ServerEndpoint;
  * ping-pay websocket
  */
 @Slf4j
-@ServerEndpoint("/ezcoins/server")
+@ServerEndpoint("/bitop/server")
 @Component
 public class WebSocketServer {
 

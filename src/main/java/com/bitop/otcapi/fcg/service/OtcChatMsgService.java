@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface OtcChatMsgService {
 
+    List<OtcChatMsg> pageByNo(String orderMatchNo);
+
     /**
      * 存入系统提示消息
      */
