@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("otc_config")
-@ApiModel(value="OtcConfig对象", description="次级菜单-OTC配置")
+@ApiModel(value="OtcConfig对象", description="OTC配置")
 public class OtcConfig extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
