@@ -20,7 +20,7 @@ public class OtcCoinConfig extends BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private int id;
+    private String id;
 
     @ApiModelProperty(value = "币种id")
     private int coinId;

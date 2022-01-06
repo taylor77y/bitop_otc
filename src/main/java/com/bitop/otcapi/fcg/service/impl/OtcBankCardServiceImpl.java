@@ -36,7 +36,7 @@ public class OtcBankCardServiceImpl extends ServiceImpl<OtcBankCardMapper, OtcBa
     public Response addOrUpdateUserBankCard(BankCardReqDto bankCardReqDto) {
         String userId = ContextHandler.getUserId();
         OtcBankCard paymentBank = new OtcBankCard();
-        BeanUtils.copyProperties(paymentBank,bankCardReqDto);
+        BeanUtils.copyProperties(bankCardReqDto, paymentBank);
         paymentBank.setUserId(userId);
         if (StringUtils.isEmpty(bankCardReqDto.getId())){
 //            必须勾选 mysql中表主键id 为 自动递增
@@ -49,14 +49,14 @@ public class OtcBankCardServiceImpl extends ServiceImpl<OtcBankCardMapper, OtcBa
 
 
     @Override
-    public Response updateUserBankCardStatus(BankCardReqDto bankCardReqDto) {
+    public Response updateStatusById(BankCardReqDto bankCardReqDto) {
         String userId = ContextHandler.getUserId();
         OtcBankCard paymentBank = new OtcBankCard();
-        BeanUtils.copyProperties(paymentBank,bankCardReqDto);
+        BeanUtils.copyProperties(bankCardReqDto, paymentBank);
         paymentBank.setUserId(userId);
         if (StringUtils.hasLength(bankCardReqDto.getId())){
 //            userWalletAddr.setCreateBy(userId);
-            baseMapper.updateById(paymentBank);
+            otcBankCardMapper.updateStatusById(paymentBank);
         }
         return Response.success();
     }

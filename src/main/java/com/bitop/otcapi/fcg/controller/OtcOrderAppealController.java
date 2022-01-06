@@ -18,7 +18,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @Api(tags = "OTC-订单申诉模块")
-@RequestMapping("/otc/internetaccount")
+@RequestMapping("/otc/otcOrderAppeal")
 public class OtcOrderAppealController {
 
     @Autowired

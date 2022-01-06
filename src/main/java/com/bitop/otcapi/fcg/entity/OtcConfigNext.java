@@ -25,7 +25,7 @@ public class OtcConfigNext extends BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private long id;
+    private String id;
 
     @ApiModelProperty(value = "卖方KYC等级 0:无认证 1：基础认证 2：高级认证")
     private short sellKycLevel;

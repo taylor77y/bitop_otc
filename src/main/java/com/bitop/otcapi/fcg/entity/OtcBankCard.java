@@ -52,5 +52,5 @@ public class OtcBankCard extends BaseEntity implements Serializable {
     private String number;
 
     @ApiModelProperty(value = "状态(0:已激活 1：未激活)",required = true)
-    private short status;
+    private String status;
 }

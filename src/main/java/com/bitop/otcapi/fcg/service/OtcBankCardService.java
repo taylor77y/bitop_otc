@@ -15,5 +15,5 @@ public interface OtcBankCardService extends IService<OtcBankCard> {
 
     Response addOrUpdateUserBankCard(BankCardReqDto bankCardReqDto);
 
-    Response updateUserBankCardStatus(BankCardReqDto bankCardReqDto);
+    Response updateStatusById(BankCardReqDto bankCardReqDto);
 }

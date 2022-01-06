@@ -43,7 +43,7 @@ public class OtcAdvertisingOrderController {
 //    @AuthToken(kyc = true,LIMIT_TYPE = LimitType.ORDERLIMIT)
 //    @Log(title = "发布广告订单", businessType = BusinessType.INSERT, operatorType = OperatorType.MOBILE)
     public Response releaseAdvertisingOrder(@RequestBody @Validated OtcOrderReqDto otcOrderReqDto) {
-        otcOrderReqDto.setUserId(ContextHandler.getUserId());
+//        otcOrderReqDto.setUserId(ContextHandler.getUserId());
         return otcOrderService.releaseAdvertisingOrder(otcOrderReqDto);
     }
 

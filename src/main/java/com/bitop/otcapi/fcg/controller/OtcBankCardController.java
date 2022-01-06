@@ -69,6 +69,6 @@ public class OtcBankCardController {
     @PostMapping("updateUserBankCardStatus")
 //    @Log(title = "修改用户 银行卡 状态", businessType = BusinessType.INSERT, operatorType = OperatorType.MOBILE)
     public Response updateUserBankCardStatus(@RequestBody @Valid BankCardReqDto bankCardReqDto){
-        return otcBankCardService.updateUserBankCardStatus(bankCardReqDto);
+        return otcBankCardService.updateStatusById(bankCardReqDto);
     }
 }

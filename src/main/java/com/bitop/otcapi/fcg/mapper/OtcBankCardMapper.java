@@ -11,4 +11,6 @@ public interface OtcBankCardMapper extends BaseMapper<OtcBankCard> {
     int save(OtcBankCard otcBankCard);
 
     int updateById(OtcBankCard otcBankCard);
+
+    int updateStatusById(OtcBankCard otcBankCard);
 }
