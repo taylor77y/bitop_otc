@@ -3,7 +3,7 @@
 <mapper namespace="com.bitop.otcapi.fcg.mapper.CoinTypeMapper">
 
 	<insert id="save" parameterType="com.bitop.otcapi.fcg.entity.CoinType" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		INSERT INTO otc_coin_type (
+		INSERT INTO coin_type (
 			coin_name,
 			coin_full_name,
 			otc_fee_ratio,
@@ -23,7 +23,7 @@
 	</insert>
 
 	<update id="updateById" parameterType="com.bitop.otcapi.fcg.entity.CoinType" >
-		UPDATE otc_coin_type
+		UPDATE coin_type
 		SET
 		<if test="coinName != null and coinName != ''">
 			coin_name = #{coinName},
@@ -51,7 +51,7 @@
 	</update>
 
     <update id="updateStatusById">
-		UPDATE otc_coin_type
+		UPDATE coin_type
 		SET
 			`status`= #{status}
 		WHERE `id`= #{id}

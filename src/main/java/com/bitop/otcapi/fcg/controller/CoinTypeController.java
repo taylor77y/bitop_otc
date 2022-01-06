@@ -48,7 +48,7 @@ public class CoinTypeController {
     }
 
     @ApiOperation(value = "修改币种状态")
-    @PostMapping("updateCoinTypeStatusById")
+    @PostMapping("updateCoinTypeStatus/{id}/{status}")
     @ApiImplicitParam(name = "id",value = "id",required = true)
 //    @AuthToken
 //    @Log(title = "资产币种模块", logInfo ="币种模块", operatorType = OperatorType.MANAGE)

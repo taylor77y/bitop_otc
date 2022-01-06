@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -47,6 +48,14 @@ public class CoinTypeServiceImpl extends ServiceImpl<CoinTypeMapper, CoinType> i
         objectMapper.getFactory().configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
     }
 
+
+//    static {
+//        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+//        factory.setReadTimeout(5000);
+//        factory.setConnectTimeout(5000);
+//
+//        restTemplate = new RestTemplate(factory);
+//    }
 
     @Override
     public void updateCoinTypeStatusById(String id, String status){

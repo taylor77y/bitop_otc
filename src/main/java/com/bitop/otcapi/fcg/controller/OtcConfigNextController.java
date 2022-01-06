@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@Api(tags = "OTC-基本配置")
+@Api(tags = "OTC-次级菜单-OTC配置")
 @RequestMapping("/otc/otcConfig")
 public class OtcConfigNextController {
 
