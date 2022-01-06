@@ -12,6 +12,7 @@ import com.bitop.otcapi.fcg.service.OtcOrderService;
 import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.response.ResponsePageList;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -48,6 +49,7 @@ public class OtcAdvertisingOrderController {
 
 //    @NoRepeatSubmit
     @ApiOperation(value = "商户 下架广告订单")
+    @ApiImplicitParam(name = "orderNo",value = "orderNo",required = true)
     @PutMapping("offShelfOrder/{orderNo}")
 //    @AuthToken
 //    @Log(title = "商户 下架广告订单", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)
@@ -56,13 +58,5 @@ public class OtcAdvertisingOrderController {
     }
 
 
-//    @NoRepeatSubmit
-    @ApiOperation(value = "用户根据订单号下单购买/出售")
-    @PostMapping("placeAnOrder")
-//    @AuthToken(kyc = true,LIMIT_TYPE = LimitType.BUSINESSLIMIT)
-//    @Log(title = "下单", businessType = BusinessType.INSERT, operatorType = OperatorType.MOBILE)
-    public Response<PaymentDetailsRespDto> placeAnOrder(@RequestBody PlaceOrderReqDto placeOrderReqDto) {
-        return otcOrderService.placeAnOrder(placeOrderReqDto);
-    }
 
 }

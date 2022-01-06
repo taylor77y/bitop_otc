@@ -7,6 +7,7 @@ import com.bitop.otcapi.fcg.service.OtcOrderAppealService;
 import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.response.ResponseList;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class OtcOrderAppealController {
 
 
     @ApiOperation(value = "根据订单号查询申诉详情")
+    @ApiImplicitParam(name = "orderMatchNo",value = "orderMatchNo",required = true)
 //    @AuthToken
     @GetMapping("appealInfo/{orderMatchNo}")
     public ResponseList<OtcOrderAppeal> appealInfo(@PathVariable String orderMatchNo){
@@ -44,6 +46,7 @@ public class OtcOrderAppealController {
 
 //    @NoRepeatSubmit
     @ApiOperation(value = "取消申诉")
+    @ApiImplicitParam(name = "id",value = "id",required = true)
     @PutMapping("cancelAppeal/{id}")
 //    @AuthToken
 //    @Log(title = "取消申诉", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)

@@ -101,6 +101,12 @@
             <version>${mybatis.plus.boot.starter.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>25.1-jre</version>
+        </dependency>
+
         <!--  javax.validation -->
         <dependency>
             <groupId>javax.validation</groupId>

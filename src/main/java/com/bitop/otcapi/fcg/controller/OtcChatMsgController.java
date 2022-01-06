@@ -5,6 +5,7 @@ import com.bitop.otcapi.fcg.entity.OtcChatMsg;
 import com.bitop.otcapi.fcg.service.OtcChatMsgService;
 import com.bitop.otcapi.response.ResponseList;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ public class OtcChatMsgController {
 
 
     @ApiOperation(value = "根据 匹配订单id查询聊天记录")
+    @ApiImplicitParam(name = "orderMatchNo",value = "orderMatchNo",required = true)
     @PostMapping("chatMsg/{orderMatchNo}")
 //    @AuthToken
     public ResponseList<OtcChatMsg> advertisingBusinessList(@PathVariable String orderMatchNo) {

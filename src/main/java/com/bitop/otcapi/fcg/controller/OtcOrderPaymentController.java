@@ -5,6 +5,7 @@ import com.bitop.otcapi.fcg.entity.OtcOrderPayment;
 import com.bitop.otcapi.fcg.service.OtcOrderPaymentService;
 import com.bitop.otcapi.response.ResponseList;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ public class OtcOrderPaymentController {
     private OtcOrderPaymentService orderPaymentService;
 
     @ApiOperation(value = "根据匹配订单号查询支付详情")
+    @ApiImplicitParam(name = "orderMatchNo",value = "orderMatchNo",required = true)
     @GetMapping("paymentMatchInfo/{orderMatchNo}")
 //    @AuthToken
     public ResponseList<OtcOrderPayment> paymentMatchInfo(@PathVariable String orderMatchNo) {
@@ -33,6 +35,7 @@ public class OtcOrderPaymentController {
 
     //    --------------------------------------------------支付详情
     @ApiOperation(value = "根据上架订单号查询支付详情")
+    @ApiImplicitParam(name = "orderNo",value = "orderNo",required = true)
     @GetMapping("paymentOrderInfo/{orderNo}")
 //    @AuthToken
     public ResponseList<OtcOrderPayment> paymentOrderInfo(@PathVariable String orderNo) {

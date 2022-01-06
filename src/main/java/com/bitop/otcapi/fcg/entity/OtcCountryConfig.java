@@ -47,15 +47,5 @@ public class OtcCountryConfig extends BaseEntity implements Serializable {
     @TableLogic(value = "0",delval = "1")
     private String isDeleted;
 
-/*    @ApiModelProperty(value = "创建时间")
-    @TableField(fill = FieldFill.INSERT)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
-
-    @ApiModelProperty(value = "更新时间")
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;*/
-
 
 }

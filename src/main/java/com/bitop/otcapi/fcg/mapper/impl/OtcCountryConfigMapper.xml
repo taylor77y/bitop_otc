@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bitop.otcapi.fcg.mapper.OtcCountryConfigMapper">
+
+    <select id="existByCountryNameAndCountryCode" resultType="java.lang.Integer">
+        select 1 from otc_country_config
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="countryName != null and countryName != ''">
+                and country_name = #{countryName}
+            </if>
+            <if test="countryNameEn != null and countryNameEn != ''">
+                and country_name_en = #{countryNameEn}
+            </if>
+            <if test="countryCode != null and countryCode != ''">
+                and country_code = #{countryCode}
+            </if>
+            <if test="countryTelCode != null and countryTelCode != ''">
+                and country_tel_code = #{countryTelCode}
+            </if>
+        </trim>
+        LIMIT 1
+    </select>
+
+    <update id="updateStatusById">
+		UPDATE otc_country_config
+		SET
+			`status`= #{status}
+		WHERE `id`= #{id}
+	</update>
+
+
+</mapper>

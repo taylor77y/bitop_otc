@@ -20,6 +20,7 @@ import com.bitop.otcapi.util.DateUtils;
 import com.bitop.otcapi.util.EncoderUtil;
 import com.bitop.otcapi.util.MessageUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -67,6 +68,7 @@ public class OtcAdvertisingBusinessController {
 
     //OTC交易word文档，新增[OTC]，展示用戶使用OTC方式信息
     @ApiOperation(value = "OTC商家交易汇总信息")
+    @ApiImplicitParam(name = "userId",value = "userId",required = false)
     @PostMapping({"advertisingBusiness/{userId}", "advertisingBusiness"})
 //    @AuthToken
     public Response<MerchantsBussinessStatsRespDto> getMonthlyMerchantsStatistics(@PathVariable(value = "userId", required = false) String userId) {

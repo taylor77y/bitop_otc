@@ -8,6 +8,7 @@ import com.bitop.otcapi.fcg.service.OtcPaymentMethodService;
 import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.response.ResponseList;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ public class OtcPaymentMethodController {
 //    @NoRepeatSubmit
 //    @AuthToken
     @ApiOperation(value = "删除收款方式")
+    @ApiImplicitParam(name = "id",value = "id",required = true)
     @PostMapping("deletePaymentInfo/{id}")
 //    @Log(title = "删除收款方式", businessType = BusinessType.DELETE, operatorType = OperatorType.MOBILE)
     public Response deletePaymentInfo(@PathVariable String id) {
