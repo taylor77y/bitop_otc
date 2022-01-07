@@ -2,6 +2,8 @@ package com.bitop.otcapi.fcg.controller;
 
 import com.bitop.otcapi.fcg.entity.CoinType;
 import com.bitop.otcapi.fcg.entity.SearchModel;
+import com.bitop.otcapi.fcg.entity.resp.DigitalCoinTypeRespDto;
+import com.bitop.otcapi.fcg.entity.resp.FiatCoinTypeRespDto;
 import com.bitop.otcapi.fcg.service.CoinTypeService;
 import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.response.ResponseList;
@@ -60,7 +62,7 @@ public class CoinTypeController {
     @ApiOperation(value = "查询所有可用 coin 信息")
 //    @AuthToken
     @GetMapping("queryAllCoins")// 交易类型：在线购买、卖出
-    public ResponseList<CoinType> queryAllCoins(){
+    public ResponseList<DigitalCoinTypeRespDto> queryAllCoins(){
 
         return ResponseList.success(otcCoinTypeService.queryAllCoinsFromHuobi());
     }
@@ -68,7 +70,7 @@ public class CoinTypeController {
     @ApiOperation(value = "法币币种（抓取系统参数配置的法币）")
 //    @AuthToken
     @GetMapping("fiatList")
-    public ResponseList<CoinType> fiatList(){
+    public ResponseList<FiatCoinTypeRespDto> fiatList(){
         return ResponseList.success(otcCoinTypeService.fiatListFromBinance());
     }
 }

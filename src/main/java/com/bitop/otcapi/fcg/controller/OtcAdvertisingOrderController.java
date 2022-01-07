@@ -48,7 +48,7 @@ public class OtcAdvertisingOrderController {
     }
 
 //    @NoRepeatSubmit
-    @ApiOperation(value = "商户 下架广告订单")
+    @ApiOperation(value = "商户-下架广告订单")
     @ApiImplicitParam(name = "orderNo",value = "orderNo",required = true)
     @PutMapping("offShelfOrder/{orderNo}")
 //    @AuthToken

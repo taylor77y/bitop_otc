@@ -3,6 +3,8 @@ package com.bitop.otcapi.fcg.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bitop.otcapi.constant.CoinConstant;
 import com.bitop.otcapi.fcg.entity.CoinType;
+import com.bitop.otcapi.fcg.entity.resp.DigitalCoinTypeRespDto;
+import com.bitop.otcapi.fcg.entity.resp.FiatCoinTypeRespDto;
 import com.bitop.otcapi.fcg.mapper.CoinTypeMapper;
 import com.bitop.otcapi.fcg.service.CoinTypeService;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -16,14 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -64,20 +65,31 @@ public class CoinTypeServiceImpl extends ServiceImpl<CoinTypeMapper, CoinType> i
 
 
     @Override
-    public List<CoinType> queryAllCoinsFromHuobi() {
+    public List<DigitalCoinTypeRespDto> queryAllCoinsFromHuobi() {
 
         ResponseEntity<String> response = restTemplate.getForEntity(huobiUrl, String.class);
         String transferResponse = response.getBody();
         log.debug("Received {}", transferResponse);
 
-        Map<String, Object> transferResponseMap;
+        LinkedHashMap transferResponseMap;
         try {
-            transferResponseMap = objectMapper.readValue(transferResponse, Map.class);
+            Assert.notNull(transferResponse, "transferResponse must not be null");
+            transferResponseMap = objectMapper.readValue(transferResponse, LinkedHashMap.class);
         } catch (IOException e) {
             log.error("Failed to convert json to map", e);
             return Collections.emptyList();
         }
-        return (List<CoinType>)transferResponseMap.get("data");
+        List<String> results = (List<String>)transferResponseMap.get("data");
+//        results.stream().filter(e -> e.equalsIgnoreCase()).collect()
+        List<DigitalCoinTypeRespDto> rs = new ArrayList<DigitalCoinTypeRespDto>();
+        DigitalCoinTypeRespDto dc;
+        for(int i=0; i<results.size();i++){
+            dc = new DigitalCoinTypeRespDto();
+            dc.setCoinName(results.get(i));
+            dc.setStatus("0");
+            rs.add(dc);
+        }
+        return rs;
     }
 
     /**
@@ -87,7 +99,7 @@ public class CoinTypeServiceImpl extends ServiceImpl<CoinTypeMapper, CoinType> i
      * @return
      */
     @Override
-    public List<CoinType> fiatListFromBinance() {
+    public List<FiatCoinTypeRespDto> fiatListFromBinance() {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -102,14 +114,16 @@ public class CoinTypeServiceImpl extends ServiceImpl<CoinTypeMapper, CoinType> i
         String transferResponse = response.getBody();
         log.debug("Received {}", transferResponse);
 
-        Map<String, Object> transferResponseMap;
+        LinkedHashMap transferResponseMap;
         try {
-            transferResponseMap = objectMapper.readValue(transferResponse, Map.class);
+            Assert.notNull(transferResponse, "transferResponse must not be null");
+            transferResponseMap = objectMapper.readValue(transferResponse, LinkedHashMap.class);
         } catch (IOException e) {
             log.error("Failed to convert json to map", e);
             return Collections.emptyList();
         }
-        return (List<CoinType>)transferResponseMap.get("data");
+//        List<Object> results = (List<Object>)transferResponseMap.get("data");
+        return (List<FiatCoinTypeRespDto>)transferResponseMap.get("data");
     }
 
     @Override
