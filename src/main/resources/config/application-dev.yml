@@ -26,6 +26,11 @@ openapi:
         huobi: https://api.huobi.pro/v1/common/currencys
         binance: https://p2p.binance.com/bapi/c2c/v1/public/c2c/trade-rule/fiat-list
 
+# jasypt加密的密匙
+jasypt:
+    encryptor:
+        password: Y6M9fAJQdU7jNp5MW
+
 spring:
     profiles:
         active: dev
@@ -47,9 +52,9 @@ spring:
         driverClassName: com.mysql.cj.jdbc.Driver
         druid: # 全局druid参数，绝大部分值和默认保持一致。(现已支持的参数如下,不清楚含义不要乱设置)
             master:
-                url: jdbc:mysql://127.0.0.1:3306/bitop?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=Asia/Shanghai
-                username: root
-                password: root
+                url: ENC(LDdRxH/2ePsI4XNF1nBOxhPTB0YHSo3cFHftWHqWun845eWu/Tb/7U8/2zYK68IkT3ibXFSXHQWXW+AP/WnQPQ5u4zscVmhUQpDWGFd0G0HC6Nz5pt38xT+ryF4dj16NG/RgjT5rCjS4pYUqoYH/2v7mFKiFa9c5v4KKR7mtNkX+7TYKUf7bwx+AJuCjIlIOCfmvtbuE2i9nscTxbeRcc18OShuWl2qQDy0t3uz2HsqakCi6upi++8C+M8p7wn6w)
+                username: ENC(us/MsydLsVGgpsKQgWwsTXzhnPmWBmtYp8RlcspfUEl1hATdWtb6sNFBjZjE5n5z)
+                password: ENC(iewdr1r0u7HO+uUwu1fOfmwhab2yzjRxVneEsMj8cRwiqnbdY6aviSaD4CQQoS6z)
             # 连接池的配置信息
             # 初始化大小，最小，最大
             initialSize: 5

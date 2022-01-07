@@ -23,6 +23,8 @@
         <druid.version>1.2.8</druid.version>
         <fastjson.version>1.2.79</fastjson.version>
         <spring-security-core.version>5.2.8.RELEASE</spring-security-core.version>
+        <bitwalker.version>1.21</bitwalker.version>
+        <jasypt.version>3.0.4</jasypt.version>
     </properties>
     <dependencies>
         <dependency>
@@ -125,6 +127,19 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>${bitwalker.version}</version>
+        </dependency>
+
+        <!--  Java Simplified Encryption -->
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>${jasypt.version}</version>
         </dependency>
 
         <!--      stomp-websocket  sockjs -->
