@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.stream.Collectors;
 
 @RestController
-@Api(tags = "OTC-国家货币代码")
+@Api(tags = "OTC-国家货币编码")
 @RequestMapping("/otc/currencyconfig")
 public class OtcCurrencyConfigController {
 
     @Autowired
     private OtcCountryConfigService countryConfigService;
 
-    @ApiOperation(value = "国家货币列表")
+    @ApiOperation(value = "国家货币编码列表")
     @GetMapping("currencyCodeList")
     public ResponseList<String> currencyCodeList(){
         LambdaQueryWrapper<OtcCountryConfig> lambdaQueryWrapper=new LambdaQueryWrapper<>();

@@ -12,6 +12,7 @@ import com.bitop.otcapi.fcg.entity.req.OtcOrderReqDto;
 import com.bitop.otcapi.fcg.entity.req.PlaceOrderReqDto;
 import com.bitop.otcapi.fcg.entity.resp.PaymentDetailsRespDto;
 import com.bitop.otcapi.fcg.entity.vo.BalanceChange;
+import com.bitop.otcapi.fcg.mapper.OtcConfigMapper;
 import com.bitop.otcapi.fcg.mapper.OtcOrderMapper;
 import com.bitop.otcapi.fcg.mapper.OtcOrderMatchMapper;
 import com.bitop.otcapi.fcg.service.*;
@@ -51,6 +52,9 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
 
     @Autowired
     private OtcConfigService configService;
+
+    @Autowired
+    private OtcConfigMapper configMapper;
 
     @Autowired
     private OtcUserService userService;
@@ -113,7 +117,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         if (maximumLimit.compareTo(coinType.getMaxAmount()) > 0 || minimumLimit.compareTo(coinType.getMinAmount()) < 0) {
             throw new BaseException("发布数量不在限额");
         }
-        OtcConfig otcConfig = configService.getById(1);//otc配置
+        OtcConfig otcConfig = configMapper.getOneById("1");//otc配置configService.getById(1)
         Integer prompt = otcOrderReqDto.getPrompt();
         if (prompt > otcConfig.getMaxPayTime() || prompt < otcConfig.getMinPayTime()) {
             throw new BaseException("付款时间不在限定时间内");
@@ -275,7 +279,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
             return Response.error(MessageUtils.message("当前币种OTC交易尚未开"));
         }
         //获取otc基本配置
-        OtcConfig otcConfig = configService.getById(1);
+        OtcConfig otcConfig = configMapper.getOneById("1");
         configService.checkOtcStatus(userId,otcConfig.getMaxCancelNum());
 
         //判断用户注册的国籍是否满足购买条件

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bitop.otcapi.fcg.mapper.OtcOrderIndexMapper">
+
+    <sql id="Base_Column_List">
+		t.name,
+		t.version,
+		t.step,
+		t.other,
+		t.current_value,
+		t.create_by,
+		t.create_time,
+		t.update_by,
+		t.update_time,
+		t.remark
+	</sql>
+
+    <select id="getOneById" resultType="com.bitop.otcapi.fcg.entity.OtcOrderIndex" parameterType="java.lang.String">
+        select <include refid="Base_Column_List" /> from otc_order_index
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+        </trim>
+        LIMIT 1
+    </select>
+
+
+</mapper>

@@ -17,9 +17,12 @@ public class OtcOrderIndexServiceImpl extends ServiceImpl<OtcOrderIndexMapper, O
     @Autowired
     private OtcCountryConfigService countryConfigService;
 
+    @Autowired
+    private OtcOrderIndexMapper orderIndexMapper;
+
     @Override
     public String getOrderNoByCountryCode(String countryCode,String id) {
-        OtcOrderIndex index = baseMapper.selectById(id);
+        OtcOrderIndex index = orderIndexMapper.getOneById(id);
         Integer currentValue = index.getCurrentValue();
         String orderNo = OrderNoUtils.getOrderNo();
         Integer other = index.getOther();

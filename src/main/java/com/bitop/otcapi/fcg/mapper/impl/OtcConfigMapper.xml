@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bitop.otcapi.fcg.mapper.OtcConfigMapper">
+
+    <sql id="Base_Column_List">
+		t.id,
+		t.max_cancel_num,
+		t.max_pay_time,
+		t.min_pay_time,
+		t.advertising_business_margin,
+		t.order_time,
+		t.create_by,
+		t.create_time,
+		t.update_by,
+		t.update_time,
+		t.remark
+	</sql>
+
+    <select id="getOneById" resultType="com.bitop.otcapi.fcg.entity.OtcConfig" parameterType="java.lang.String">
+        select <include refid="Base_Column_List" /> from otc_config
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+        </trim>
+        LIMIT 1
+    </select>
+
+    <update id="updateStatusById">
+		UPDATE otc_config
+		SET
+			`status`= #{status}
+		WHERE `id`= #{id}
+	</update>
+
+
+</mapper>
