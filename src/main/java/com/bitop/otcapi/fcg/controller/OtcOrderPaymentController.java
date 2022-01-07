@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = "OTC-查询用户支付详情模块")
-@RequestMapping("/otc/internetaccount")
+@RequestMapping("/otc/orderpayment")
 public class OtcOrderPaymentController {
 
     @Autowired

@@ -17,7 +17,7 @@ import javax.validation.Valid;
 
 @RestController
 @Api(tags = "OTC-次级菜单-OTC配置")
-@RequestMapping("/otc/otcConfig")
+@RequestMapping("/otc/confignext")
 public class OtcConfigNextController {
 
 

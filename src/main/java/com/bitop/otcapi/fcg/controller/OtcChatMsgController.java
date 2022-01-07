@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = "OTC-聊天记录模块")
-@RequestMapping("/otc/ezOtcChatMsg")
+@RequestMapping("/otc/chatmsg")
 public class OtcChatMsgController {
 
     @Autowired

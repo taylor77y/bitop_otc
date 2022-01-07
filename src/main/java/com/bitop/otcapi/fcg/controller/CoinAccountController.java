@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = "资产账户模块")
-@RequestMapping("/admin/coin/account")
+@RequestMapping("/otc/coinaccount")
 public class CoinAccountController {
 }

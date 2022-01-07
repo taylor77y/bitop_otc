@@ -45,7 +45,7 @@ public class OtcBankCardController {
 
 
     @ApiOperation(
-            value = "Get bankCodes",
+            value = "银行卡英文缩写编码列表",
             nickname = "getBankCodes",
             response = BankCodeRespDto.class,
             responseContainer = "List")

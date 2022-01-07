@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = "OTC-基本配置")
-@RequestMapping("/otc/otcConfig")
+@RequestMapping("/otc/basicconfig")
 public class OtcConfigController {
 
     @Autowired

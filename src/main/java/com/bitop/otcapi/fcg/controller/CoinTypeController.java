@@ -24,7 +24,7 @@ import javax.validation.Valid;
  */
 @RestController
 @Api(tags = "OTC-币种模块")
-@RequestMapping("/otc/coin/type")
+@RequestMapping("/otc/cointype")
 public class CoinTypeController {
 
     @Autowired

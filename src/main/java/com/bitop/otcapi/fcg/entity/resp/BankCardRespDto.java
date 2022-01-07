@@ -18,6 +18,9 @@ public class BankCardRespDto {
     @ApiModelProperty(value = "银行英文缩写编码")
     private String bankCode;
 
+    @ApiModelProperty(value = "账户名")
+    private String accountName;
+
     @ApiModelProperty(value = "银行卡号")
     private String number;
 

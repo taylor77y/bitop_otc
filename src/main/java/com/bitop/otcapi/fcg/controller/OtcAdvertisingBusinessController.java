@@ -30,7 +30,7 @@ import java.util.Date;
 
 @RestController
 @Api(tags = "OTC-广告商户模块")
-@RequestMapping("/otc/ezAdvertisingBusiness")
+@RequestMapping("/otc/advertisingbusiness")
 public class OtcAdvertisingBusinessController {
 
     @Autowired

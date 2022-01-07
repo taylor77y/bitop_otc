@@ -22,7 +22,7 @@ import java.util.Date;
 
 @RestController
 @Api(tags = "OTC-广告订单模块")
-@RequestMapping("/otc/ezAdvertisingBusiness")
+@RequestMapping("/otc/advertisingorder")
 public class OtcAdvertisingOrderController {
 
     @Autowired

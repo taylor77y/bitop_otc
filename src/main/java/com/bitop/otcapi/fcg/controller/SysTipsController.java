@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(tags = "系统模块-站内信")
-@RequestMapping("/system/sys-tips")
+@RequestMapping("/system/systips")
 public class SysTipsController {
 
     @Autowired

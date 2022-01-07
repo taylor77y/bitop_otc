@@ -7,15 +7,21 @@ import com.bitop.otcapi.fcg.service.OtcAdvertisingBusinessService;
 import com.bitop.otcapi.fcg.service.OtcCoinConfigService;
 import com.bitop.otcapi.response.ResponseList;
 import com.bitop.otcapi.util.MessageUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 
+@RestController
+@Api(tags = "OTC-coins挂单配置")
+@RequestMapping("/otc/coinconfig")
 public class OtcCoinConfigController {
 
     @Autowired

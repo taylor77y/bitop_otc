@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @Api(tags = "OTC-国家编号管理模块")
-@RequestMapping("/otc/countryConfig")
+@RequestMapping("/otc/countryconfig")
 public class OtcCountryConfigController {
 
     @Autowired

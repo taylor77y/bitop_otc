@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.stream.Collectors;
 
 @RestController
-@Api(tags = "APP-国家货币代码")
-@RequestMapping("/config/app")
+@Api(tags = "OTC-国家货币代码")
+@RequestMapping("/otc/currencyconfig")
 public class OtcCurrencyConfigController {
 
     @Autowired

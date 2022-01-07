@@ -18,14 +18,14 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @Api(tags = "OTC-订单申诉模块")
-@RequestMapping("/otc/otcOrderAppeal")
+@RequestMapping("/otc/orderappeal")
 public class OtcOrderAppealController {
 
     @Autowired
     private OtcOrderAppealService appealService;
 
 //    @NoRepeatSubmit
-    @ApiOperation(value = "订单申诉")
+    @ApiOperation(value = "提起订单申诉")
     @PutMapping("appeal")
 //    @AuthToken
 //    @Log(title = "订单申诉", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)

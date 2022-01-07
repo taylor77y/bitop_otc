@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Api(tags = "OTC-匹配订单模块")
-@RequestMapping("/otc/otcOrderMatch")
+@RequestMapping("/otc/ordermatch")
 public class OtcOrderMatchController {
 
     @Autowired
