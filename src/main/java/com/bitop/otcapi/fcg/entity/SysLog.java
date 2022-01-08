@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="ezcoinsSysLog对象", description="系统日志")
+@ApiModel(value="SysLog对象", description="系统日志（记录修改数据库表的操作日志）")
 @TableName("sys_log")
 public class SysLog implements Serializable {
 
