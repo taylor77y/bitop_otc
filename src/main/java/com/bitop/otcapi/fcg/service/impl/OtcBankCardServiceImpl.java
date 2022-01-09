@@ -14,6 +14,7 @@ import com.bitop.otcapi.response.Response;
 import com.bitop.otcapi.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class OtcBankCardServiceImpl extends ServiceImpl<OtcBankCardMapper, OtcBa
     private OtcBankCardMapper otcBankCardMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<BankCardRespDto> userBankCardList(String userId) {
         LambdaQueryWrapper<OtcBankCard> lambdaQueryWrapper=new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(OtcBankCard::getUserId, userId);

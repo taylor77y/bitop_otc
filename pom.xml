@@ -142,6 +142,11 @@
             <version>${jasypt.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
         <!--      stomp-websocket  sockjs -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

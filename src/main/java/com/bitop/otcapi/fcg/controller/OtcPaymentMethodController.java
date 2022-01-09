@@ -39,7 +39,7 @@ public class OtcPaymentMethodController {
 //        }
 
         LambdaQueryWrapper<OtcPaymentMethod> alipayQueryWrapper = new LambdaQueryWrapper<>();
-        alipayQueryWrapper.eq(OtcPaymentMethod::getUserId, ContextHandler.getUserId());
+        alipayQueryWrapper.eq(OtcPaymentMethod::getUserId, "2147483647");//ContextHandler.getUserId()
         return ResponseList.success(otcPaymentMethodService.list(alipayQueryWrapper));
     }
 

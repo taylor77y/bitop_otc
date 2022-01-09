@@ -31,6 +31,7 @@ public class OtcInternetAccountServiceImpl extends ServiceImpl<OtcInternetAccoun
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public List<InternetAccountRespDto> internetAccountList(String userId) {
         LambdaQueryWrapper<OtcInternetAccount> lambdaQueryWrapper=new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(OtcInternetAccount::getUserId, userId);

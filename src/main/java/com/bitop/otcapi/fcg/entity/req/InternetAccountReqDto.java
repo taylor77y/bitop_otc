@@ -16,8 +16,8 @@ public class InternetAccountReqDto {
     private String internetAccountNumber;
 
     @ApiModelProperty(value = "网络账号类型")
-    private short internetAccountType;
+    private String internetAccountType;
 
     @ApiModelProperty(value = "状态(0:已激活 1：未激活)")
-    private short status;
+    private String status;
 }

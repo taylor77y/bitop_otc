@@ -93,7 +93,7 @@ public class OtcAdvertisingBusinessController {
         //月成功成交笔数（以三十日为基准计算）
         LambdaQueryWrapper<OtcOrderMatch> q = new LambdaQueryWrapper<OtcOrderMatch>();
         q.eq(OtcOrderMatch::getOtcOrderUserId, userId1);
-        q.eq(OtcOrderMatch::getStatus, MatchOrderStatus.COMPLETED);
+        q.eq(OtcOrderMatch::getStatus, MatchOrderStatus.COMPLETED.getCode());
         Date ndayStart = DateUtils.getNdayStart(-30);
         q.gt(OtcOrderMatch::getFinishTime, ndayStart);
         merchantsBussinessStatsRespDto.setMonthlySuccessCount(orderMatchService.count(q));

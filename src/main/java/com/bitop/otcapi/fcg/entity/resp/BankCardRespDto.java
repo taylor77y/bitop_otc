@@ -10,7 +10,7 @@ public class BankCardRespDto {
     private String id;
 
     @ApiModelProperty(value = "用户ID")
-    private Integer userId;
+    private String userId;
 
     @ApiModelProperty(value = "银行中文名称")
     private String bankName;

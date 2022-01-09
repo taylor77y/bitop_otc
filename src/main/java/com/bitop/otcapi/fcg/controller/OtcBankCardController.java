@@ -40,12 +40,12 @@ public class OtcBankCardController {
 //    @AuthToken
     @GetMapping("userBankCardList")
     public ResponseList<BankCardRespDto> userBankCardList(){
-        return ResponseList.success(otcBankCardService.userBankCardList("123456"));
+        return ResponseList.success(otcBankCardService.userBankCardList("2147483647"));
     }
 
 
     @ApiOperation(
-            value = "银行卡英文缩写编码列表",
+            value = "银行名英文缩写编码列表",
             nickname = "getBankCodes",
             response = BankCodeRespDto.class,
             responseContainer = "List")
