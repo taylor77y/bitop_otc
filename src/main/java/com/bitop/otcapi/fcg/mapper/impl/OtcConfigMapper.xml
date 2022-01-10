@@ -20,7 +20,7 @@
         select <include refid="Base_Column_List" /> from otc_config AS t
         <trim prefix="WHERE" prefixOverrides="AND | OR" >
             <if test="id != null and id != ''">
-                and id = #{id}
+                and t.id = #{id}
             </if>
         </trim>
         LIMIT 1
