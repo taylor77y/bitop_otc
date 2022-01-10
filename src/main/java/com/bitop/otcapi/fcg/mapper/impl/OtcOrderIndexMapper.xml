@@ -16,7 +16,7 @@
 	</sql>
 
     <select id="getOneById" resultType="com.bitop.otcapi.fcg.entity.OtcOrderIndex" parameterType="java.lang.String">
-        select <include refid="Base_Column_List" /> from otc_order_index
+        select <include refid="Base_Column_List" /> from otc_order_index AS t
         <trim prefix="WHERE" prefixOverrides="AND | OR" >
             <if test="id != null and id != ''">
                 and id = #{id}
