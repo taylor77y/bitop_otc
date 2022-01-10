@@ -1,5 +1,6 @@
 package com.bitop.otcapi.fcg.controller;
 
+import com.bitop.otcapi.context.ContextHandler;
 import com.bitop.otcapi.fcg.entity.req.InternetAccountReqDto;
 import com.bitop.otcapi.fcg.entity.resp.InternetAccountRespDto;
 import com.bitop.otcapi.fcg.service.OtcInternetAccountService;
@@ -27,7 +28,7 @@ public class OtcInternetAccountController  {
 //    @AuthToken
     @GetMapping("internetAccountList")
     public ResponseList<InternetAccountRespDto> internetAccountList(){
-        return ResponseList.success(internetAccountService.internetAccountList("123456"));
+        return ResponseList.success(internetAccountService.internetAccountList(ContextHandler.getUserId()));
     }
 
 

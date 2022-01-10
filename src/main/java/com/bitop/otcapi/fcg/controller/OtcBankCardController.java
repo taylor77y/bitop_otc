@@ -1,5 +1,9 @@
 package com.bitop.otcapi.fcg.controller;
 
+import com.bitop.otcapi.aspectj.lang.annotation.AuthToken;
+import com.bitop.otcapi.aspectj.lang.annotation.Log;
+import com.bitop.otcapi.constant.BusinessType;
+import com.bitop.otcapi.constant.OperatorType;
 import com.bitop.otcapi.fcg.entity.resp.BankCodeRespDto;
 import com.bitop.otcapi.fcg.service.OtcBankCardService;
 import com.bitop.otcapi.response.Response;
@@ -37,7 +41,7 @@ public class OtcBankCardController {
     private OtcBankCardService otcBankCardService;
 
     @ApiOperation(value = "用户银行卡列表")
-//    @AuthToken
+    @AuthToken
     @GetMapping("userBankCardList")
     public ResponseList<BankCardRespDto> userBankCardList(){
         return ResponseList.success(otcBankCardService.userBankCardList("2147483647"));
@@ -58,16 +62,16 @@ public class OtcBankCardController {
     @ApiOperation(value = "添加/修改 用户银行卡信息")
 //    @AuthToken
     @PostMapping("addOrUpdateUserBankCard")
-//    @Log(title = "添加/修改 用户银行卡信息", businessType = BusinessType.INSERT, operatorType = OperatorType.MOBILE)
+    @Log(title = "添加/修改 用户银行卡信息", businessType = BusinessType.INSERT, operatorType = OperatorType.MOBILE)
     public Response addOrUpdateUserBankCard(@RequestBody @Valid BankCardReqDto bankCardReqDto){
         return otcBankCardService.addOrUpdateUserBankCard(bankCardReqDto);
     }
 
 
     @ApiOperation(value = "修改用户 银行卡 状态")
-//    @AuthToken
+    @AuthToken
     @PostMapping("updateUserBankCardStatus")
-//    @Log(title = "修改用户 银行卡 状态", businessType = BusinessType.INSERT, operatorType = OperatorType.MOBILE)
+    @Log(title = "修改用户 银行卡 状态", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)
     public Response updateUserBankCardStatus(@RequestBody @Valid BankCardReqDto bankCardReqDto){
         return otcBankCardService.updateStatusById(bankCardReqDto);
     }

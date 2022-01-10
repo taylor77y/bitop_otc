@@ -1,6 +1,7 @@
 package com.bitop.otcapi.fcg.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bitop.otcapi.context.ContextHandler;
 import com.bitop.otcapi.fcg.entity.OtcConfigNext;
 import com.bitop.otcapi.fcg.entity.req.OtcConfigNextReqDto;
 import com.bitop.otcapi.fcg.mapper.OtcConfigNextMapper;
@@ -23,7 +24,7 @@ public class OtcConfigNextServiceImpl extends ServiceImpl<OtcConfigNextMapper, O
      */
     @Override
     public Response addOrUpdateOtcConfig(OtcConfigNextReqDto otcConfigNextReqDto) {
-//        String userId = ContextHandler.getUserId();
+        String userId = ContextHandler.getUserId();
         OtcConfigNext otcConfigNext = new OtcConfigNext();
         BeanUtils.copyProperties(otcConfigNextReqDto, otcConfigNext);
 //        otcConfig.setUserId(userId);
