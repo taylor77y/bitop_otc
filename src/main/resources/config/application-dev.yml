@@ -165,6 +165,12 @@ spring:
     resources:
         static-locations: classpath:/static-dev/,classpath:/static/
 
+token:
+  header: Authorization
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）（7天=10080分钟）
+  expireTime: 10080
+
 
 mybatis-plus:
     configuration:

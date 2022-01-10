@@ -25,6 +25,7 @@
         <spring-security-core.version>5.2.8.RELEASE</spring-security-core.version>
         <bitwalker.version>1.21</bitwalker.version>
         <jasypt.version>3.0.4</jasypt.version>
+        <jwt.version>0.9.1</jwt.version>
     </properties>
     <dependencies>
         <dependency>
@@ -145,6 +146,12 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jwt.version}</version>
         </dependency>
 
         <!--      stomp-websocket  sockjs -->
