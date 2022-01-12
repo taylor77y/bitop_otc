@@ -1,5 +1,6 @@
 package com.bitop.otcapi;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,12 +9,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DatabaseJasyptTest {
 
     @Autowired
     private StringEncryptor encryptor;
+
+    @Test
+    public void whenCalledhashCode_thenCorrect() {
+        String[] array = {"a", "b", "c"};
+        assertThat(ArrayUtils.hashCode(array))
+                .isEqualTo(997619);
+    }
+
+    @Test
+    public void whenCalledtoMap_thenCorrect() {
+        String[][] array = {{"1", "one", }, {"2", "two", }, {"3", "three"}};
+        Map map = new HashMap();
+        map.put("1", "one");
+        map.put("2", "two");
+        map.put("3", "three");
+        assertThat(ArrayUtils.toMap(array))
+                .isEqualTo(map);
+    }
+
 
 /*    @Test
     public void getPass() {
