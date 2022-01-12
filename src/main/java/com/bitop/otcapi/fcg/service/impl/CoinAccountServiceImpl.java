@@ -83,21 +83,21 @@ public class CoinAccountServiceImpl extends ServiceImpl<CoinAccountMapper, CoinA
             log.debug("an act or the right of selecting something from among a group of alternatives");
             log.info("操作用户ID[{}]币种ID[{}-{}]余额数量[{}]冻结数量[{}]锁仓数量[{}],操作主类型[{}],操作子类型[{}]", c.getUserId(), c.getCoinName(), c.getCoinName(),
                     c.getAvailable(), c.getFrozen(), c.getLockup(), c.getMainType(), c.getSonType());
-            if (StringUtils.isEmpty(c.getAvailable()) && c.getAvailable().compareTo(BigDecimal.ZERO) != 0) {//判断 操作剩余金额
+            if (!StringUtils.isEmpty(c.getAvailable()) && c.getAvailable().compareTo(BigDecimal.ZERO) != 0) {//判断 操作剩余金额
                 if (acc.getAvailable().add(c.getAvailable()).compareTo(BigDecimal.ZERO) < 0) {
                     throw new AccountBalanceNotEnoughException();
                 } else {
                     acc.setAvailable(acc.getAvailable().add(c.getAvailable()));
                 }
             }
-            if (StringUtils.isEmpty(c.getFrozen()) && c.getFrozen().compareTo(BigDecimal.ZERO) != 0) {//判断 操作冻结金额
+            if (!StringUtils.isEmpty(c.getFrozen()) && c.getFrozen().compareTo(BigDecimal.ZERO) != 0) {//判断 操作冻结金额
                 if (acc.getFrozen().add(c.getFrozen()).compareTo(BigDecimal.ZERO) < 0) {
                     throw new AccountBalanceNotEnoughException();
                 } else {
                     acc.setFrozen(acc.getFrozen().add(c.getFrozen()));
                 }
             }
-            if (StringUtils.isEmpty(c.getLockup()) && c.getLockup().compareTo(BigDecimal.ZERO) != 0) { //判断 操作锁仓金额
+            if (!StringUtils.isEmpty(c.getLockup()) && c.getLockup().compareTo(BigDecimal.ZERO) != 0) { //判断 操作锁仓金额
                 if (acc.getLockup().add(c.getLockup()).compareTo(BigDecimal.ZERO) < 0) {
                     throw new AccountBalanceNotEnoughException();
                 } else {

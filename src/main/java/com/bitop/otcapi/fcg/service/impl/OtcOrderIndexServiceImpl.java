@@ -22,7 +22,7 @@ public class OtcOrderIndexServiceImpl extends ServiceImpl<OtcOrderIndexMapper, O
 
     @Override
     public String getOrderNoByCountryCode(String countryCode,String id) {
-        OtcOrderIndex index = orderIndexMapper.getOneById(id);
+        OtcOrderIndex index = orderIndexMapper.getOneByName(id);
         Integer currentValue = index.getCurrentValue();
         String orderNo = OrderNoUtils.getOrderNo();
         Integer other = index.getOther();

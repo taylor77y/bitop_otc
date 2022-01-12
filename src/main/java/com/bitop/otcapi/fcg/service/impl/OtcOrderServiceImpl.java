@@ -157,6 +157,9 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
             cList.add(b2);
         }
 
+        //将支付方式存入数据订单对应的支付详情表
+        paymentService.depositPayment(otcOrderReqDto.getPaymentMethod1(), otcOrderReqDto.getPaymentMethod2(), otcOrderReqDto.getPaymentMethod3(), userId, orderNo, null);
+
         if (!accountService.balanceChangeSYNC(cList)) {// 资产变更异常
             throw new AccountOperationBusyException();
         }
@@ -241,7 +244,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
     @Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)//value="transactionManager1",
     public Response<PaymentDetailsRespDto> placeAnOrder(PlaceOrderReqDto placeOrderReqDto) {
         String userId = ContextHandler.getUserId();
-        //通过订单号查询到购买的订单
+        //通过订单号查询到购买的广告订单
         String orderNo = placeOrderReqDto.getOrderNo();
         OtcOrder ezOtcOrder = baseMapper.selectById(orderNo);
         PaymentDetailsRespDto details = new PaymentDetailsRespDto();

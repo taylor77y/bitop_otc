@@ -14,7 +14,7 @@ import java.io.Serializable;
 @TableName("otc_order_payment")
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="OtcOrderPayment对象", description="订单支付方式详情表")
-public class OtcOrderPayment implements Serializable {
+public class OtcOrderPayment extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

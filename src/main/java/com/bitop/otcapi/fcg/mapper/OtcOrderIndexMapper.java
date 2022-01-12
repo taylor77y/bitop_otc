@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface OtcOrderIndexMapper extends BaseMapper<OtcOrderIndex> {
 
-    OtcOrderIndex getOneById(@Param("id")String id);
+    OtcOrderIndex getOneByName(@Param("name")String name);
 }
