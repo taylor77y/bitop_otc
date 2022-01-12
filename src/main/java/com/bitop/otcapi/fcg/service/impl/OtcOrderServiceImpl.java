@@ -304,7 +304,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
             return Response.error(MessageUtils.message("输入数量不满足条件范围"));
         }
         BigDecimal totalAmount = ezOtcOrder.getTotalAmount();//广告总数量
-        BigDecimal quotaAmount = ezOtcOrder.getQuotaAmount();//匹配数量
+        BigDecimal quotaAmount = amount;//ezOtcOrder.getQuotaAmount();//匹配数量
         BigDecimal nuQuotaAmount = totalAmount.subtract(quotaAmount);//未匹配的数量
         //未匹配的数量  是否大于购买数量
         if (nuQuotaAmount.compareTo(amount) < 0) {
@@ -326,10 +326,13 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         match.setUserId(userId);
         match.setOtcOrderUserId(ezOtcOrder.getUserId());
         match.setOrderMatchNo(orderMatchNo);
+        match.setOrderType("1");
         match.setAmount(placeOrderReqDto.getAmount());
         match.setTotalPrice(totalPrice);
         match.setAdvertisingName(map.get(ezOtcOrder.getUserId()).getAdvertisingName());
         match.setMatchAdvertisingName(map.get(userId).getAdvertisingName());
+        BigDecimal feeRatio = coinType.getOtcFeeRatio();
+        match.setFee(feeRatio.multiply(amount));
 
 //        BeanUtils.copyBeanProp(details, ezOtcOrder);
         BeanUtils.copyProperties(ezOtcOrder, details);
