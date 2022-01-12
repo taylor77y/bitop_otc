@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -72,7 +74,7 @@ public class OtcAdvertisingBusinessServiceImpl extends ServiceImpl<OtcAdvertisin
 
 
     @Override
-    public void updateCount(String sellUserId, String buyUserId, Date payTime, Date finishTime, boolean isAdmin, String status) {
+    public void updateCount(String sellUserId, String buyUserId, LocalDateTime payTime, LocalDateTime finishTime, boolean isAdmin, String status) {
         List<OtcAdvertisingBusiness> businesses = new ArrayList<>();
         //根据用户查询到OTC详情
 //        LambdaQueryWrapper<OtcAdvertisingBusiness> sell = new LambdaQueryWrapper<>();
@@ -117,7 +119,7 @@ public class OtcAdvertisingBusinessServiceImpl extends ServiceImpl<OtcAdvertisin
                 buyInfo.setFinishBuyRate((finishBuyRete / buyCount) + 1);
             }
         } else {
-            Long releaseTime = finishTime.getTime() - payTime.getTime();//放行时间
+            Long releaseTime = finishTime.toInstant(ZoneOffset.of("+8")).toEpochMilli() - payTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();//放行时间
             var time = Math.floor(releaseTime / 60 % 60);
             buyInfo.setAveragePass((time + sellInfo.getAveragePass() * sellInfo.getSellCount()) / (finishSell + 1));//平均放行时间
 

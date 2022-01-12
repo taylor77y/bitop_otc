@@ -34,6 +34,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -165,6 +166,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         }
         BeanUtils.copyProperties(otcOrderReqDto,ezOtcOrder);
         ezOtcOrder.setAdvertisingName(one.getAdvertisingName());
+        ezOtcOrder.setStatus("0");
         //存入新的订单
         baseMapper.insert(ezOtcOrder);
         //给用户一个新订单信号
@@ -224,7 +226,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         }
         //改变订单状态
         ezOtcOrder.setStatus("1");
-        ezOtcOrder.setEndTime(new Date());
+        ezOtcOrder.setEndTime(LocalDateTime.now());
         baseMapper.updateById(ezOtcOrder);
         return Response.success();
     }
@@ -402,7 +404,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
 
         Date beForeTime = DateUtils.getBeForeTime(prompt);
         details.setDueTime(beForeTime);
-        match.setDueTime(beForeTime);
+        match.setDueTime(LocalDateTime.now().minusMinutes(prompt));
         orderMatchService.save(match);
         //TODO:将订单存入rabbitmq进行死信通信  时间到了就取消订单 根据卖家用户设置而定
         rabbitMQService.convert(orderMatchNo, match.getStatus(), prompt);

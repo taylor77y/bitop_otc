@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +42,14 @@ public class DatabaseJasyptTest {
         assertThat(ArrayUtils.toMap(array))
                 .isEqualTo(map);
     }
+
+/*    @Test
+    public void whenCalledLocalDateTime_thenCorrect() {
+        System.out.println(LocalDateTime.now());
+        System.out.println(LocalDateTime.now().minusMinutes(5));
+        assertThat(Instant.now().toEpochMilli())
+                .isEqualTo(new Date().getTime());
+    }*/
 
 
 /*    @Test

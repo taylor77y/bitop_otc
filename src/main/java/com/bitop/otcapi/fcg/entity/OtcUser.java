@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -80,7 +81,7 @@ public class OtcUser extends BaseEntity implements Serializable {
     private String loginIp;
 
     @ApiModelProperty(value = "最后登录时间")
-    private Date loginDate;
+    private LocalDateTime loginDate;
 
     @ApiModelProperty(value = "登录状态  0：未封号 1：已封号")
     @TableField(exist = false)

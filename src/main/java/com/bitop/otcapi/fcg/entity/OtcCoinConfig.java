@@ -44,7 +44,7 @@ public class OtcCoinConfig extends BaseEntity implements Serializable {
     private double fee;
 
     @ApiModelProperty(value = "状态 （0启用 1禁用 ）")
-    private short status;
+    private int status;
 
     @ApiModelProperty(value = "停止销售（0启用 1禁用 ）")
     private int stopSelling;

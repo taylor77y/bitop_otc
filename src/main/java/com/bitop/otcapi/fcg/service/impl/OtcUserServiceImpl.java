@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class OtcUserServiceImpl extends ServiceImpl<OtcUserMapper, OtcUser> impl
         String token = jwtHelper.createToken(jwtInfo);
         log.info("  require logging... >>userToken:{}<<", token);
         String userId = ezUser.getUserId();
-        ezUser.setLoginDate(new Date());
+        ezUser.setLoginDate(LocalDateTime.now());
         final String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
         ezUser.setLoginIp(ip);
         baseMapper.updateById(ezUser);

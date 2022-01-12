@@ -5,6 +5,7 @@ import com.bitop.otcapi.fcg.entity.OtcAdvertisingBusiness;
 import com.bitop.otcapi.fcg.entity.req.OtcSettingReqDto;
 import com.bitop.otcapi.response.Response;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public interface OtcAdvertisingBusinessService extends IService<OtcAdvertisingBusiness> {
@@ -12,5 +13,5 @@ public interface OtcAdvertisingBusinessService extends IService<OtcAdvertisingBu
     //完善otc交易信息
     Response otcSetting(OtcSettingReqDto otcSettingReqDto);
 
-    void updateCount(String sellUserId, String buyUserId, Date payTime, Date finishTime, boolean isAdmin, String status);
+    void updateCount(String sellUserId, String buyUserId, LocalDateTime payTime, LocalDateTime finishTime, boolean isAdmin, String status);
 }

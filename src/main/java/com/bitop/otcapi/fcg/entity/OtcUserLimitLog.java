@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -53,10 +54,10 @@ public class OtcUserLimitLog implements Serializable {
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @ApiModelProperty(value = "封号到期时间（null：永久封号）")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date banTime;
+    private LocalDateTime banTime;
 
 }

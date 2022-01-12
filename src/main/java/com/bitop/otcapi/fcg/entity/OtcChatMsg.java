@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -43,7 +44,7 @@ public class OtcChatMsg implements Serializable {
     @ApiModelProperty(value = "发送时间")
     @TableField(fill = FieldFill.INSERT)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @ApiModelProperty(value = "发送内容")
     private String sendText;

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -35,7 +36,7 @@ public class MerchantsBussinessStatsRespDto {
 
     @ApiModelProperty(value = "注册时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date registrationTime;
+    private LocalDateTime registrationTime;
 
     @ApiModelProperty(value = "保证金")
     private BigDecimal margin;

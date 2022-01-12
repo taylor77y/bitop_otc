@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -146,7 +147,7 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
         if (!orderMatch.getStatus().equals(MatchOrderStatus.WAITFORPAYMENT.getCode())) {
             return Response.error(MessageUtils.message("订单状态已发生变化"));
         }
-        orderMatch.setPaymentTime(new Date());
+        orderMatch.setPaymentTime(LocalDateTime.now());
         orderMatch.setStatus(MatchOrderStatus.PAID.getCode());
         String userId = ContextHandler.getUserId();
         String sellUserId = null;
@@ -184,7 +185,7 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
     @Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)//value="transactionManager1",
     public Response sellerPut(String matchOrderNo, boolean isAdmin) {
         String userId = ContextHandler.getUserId();
-        Date nowDate = new Date();
+//        Date nowDate = new Date();
         OtcOrderMatch orderMatch = baseMapper.selectById(matchOrderNo);
         //判断订单状态
         if (!orderMatch.getStatus().equals(MatchOrderStatus.PAID.getCode())) {
@@ -253,7 +254,7 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
         String buyUserId = null;
         boolean flag = false;
         boolean flag1=false;
-        Date payTime = orderMatch.getPaymentTime();
+        LocalDateTime payTime = orderMatch.getPaymentTime();
         if ("0".equals(ezOtcOrder.getType())) {//买单
             if (isAdmin) {
                 userId = orderMatch.getUserId();
@@ -274,7 +275,7 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
             if(ezOtcOrder.getMinimumLimit().compareTo(subtract) > 0){
                 flag1 = true;
                 ezOtcOrder.setStatus("1");
-                ezOtcOrder.setEndTime(new Date());
+                ezOtcOrder.setEndTime(LocalDateTime.now());
                 otcOrderService.updateById(ezOtcOrder);
             }
         } else if ("1".equals(ezOtcOrder.getType())) {  //卖单 需要广告商户进行放币
@@ -313,14 +314,14 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
                 cList.add(b);
                 //改变订单状态
                 ezOtcOrder.setStatus("1");
-                ezOtcOrder.setEndTime(new Date());
+                ezOtcOrder.setEndTime(LocalDateTime.now());
             }
             otcOrderService.updateById(ezOtcOrder);
         }
 
         //改变订单状态
         orderMatch.setStatus(MatchOrderStatus.COMPLETED.getCode());
-        orderMatch.setFinishTime(nowDate);
+        orderMatch.setFinishTime(LocalDateTime.now());
         baseMapper.updateById(orderMatch);
         if (!accountService.balanceChangeSYNC(cList)) {// 资产变更异常
             throw new AccountOperationBusyException();
@@ -345,7 +346,7 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
             AsyncManager.me().execute(AsyncFactory.sendSysChat(sellUserId, buyUserId, orderMatch.getOrderMatchNo(),
                     SysOrderConstants.SysChatMsg.RELEASE_SUCCESS, MatchOrderStatus.COMPLETED));
         }
-        AsyncManager.me().execute(AsyncFactory.updateCount(sellUserId, buyUserId, payTime, nowDate, isAdmin, "0"));
+        AsyncManager.me().execute(AsyncFactory.updateCount(sellUserId, buyUserId, payTime, LocalDateTime.now(), isAdmin, "0"));
         if (flag) {//系统下架提醒
             AsyncManager.me().execute(AsyncFactory.StationLetter(ezOtcOrder.getUserId(),
                     SysTipsConstants.TipsType.SYS_OFF_SHELF, ezOtcOrder.getOrderNo(),

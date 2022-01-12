@@ -28,6 +28,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -120,7 +121,7 @@ public class LogProduce {
             operLog.setMethod(className + "." + methodName + "()");
 
             operLog.setUserId(info.getUserId());
-            operLog.setCreateTime(new Date());
+            operLog.setCreateTime(LocalDateTime.now());
             // 设置请求方式
             operLog.setRequestMethod(ServletUtils.getRequest().getMethod());
             // 处理设置注解上的参数

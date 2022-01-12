@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -89,7 +90,7 @@ public class OtcOrder extends BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "订单完成时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date endTime;
+    private LocalDateTime endTime;
 
 /*    @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)

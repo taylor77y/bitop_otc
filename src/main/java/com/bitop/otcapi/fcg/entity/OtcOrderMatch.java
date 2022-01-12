@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import java.io.Serializable;
@@ -57,11 +58,11 @@ public class OtcOrderMatch extends BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "支付时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date paymentTime;
+    private LocalDateTime paymentTime;
 
     @ApiModelProperty(value = "完成时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date finishTime;
+    private LocalDateTime finishTime;
 
     @ApiModelProperty(value = "商户OTC昵称")
     private String advertisingName;
@@ -86,7 +87,7 @@ public class OtcOrderMatch extends BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "订单到期时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date dueTime;
+    private LocalDateTime dueTime;
 
     @ApiModelProperty(value = "乐观锁")
     @Version

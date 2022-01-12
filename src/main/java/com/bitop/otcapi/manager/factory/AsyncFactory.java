@@ -11,6 +11,8 @@ import com.bitop.otcapi.fcg.service.SysTipsService;
 import com.bitop.otcapi.util.SpringUtils;
 import com.bitop.otcapi.websocket.WebSocketHandle;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -66,7 +68,7 @@ public class AsyncFactory {
     /**
      * 修改商户卖单买单
      */
-    public static TimerTask updateCount(String sellUserId, String buyUserId, Date payTime, Date finishTime, boolean isAdmin, String status) {
+    public static TimerTask updateCount(String sellUserId, String buyUserId, LocalDateTime payTime, LocalDateTime finishTime, boolean isAdmin, String status) {
         return new TimerTask(){
             @Override
             public void run(){

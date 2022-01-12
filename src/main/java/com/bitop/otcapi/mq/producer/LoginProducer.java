@@ -12,6 +12,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
@@ -49,7 +50,7 @@ public class LoginProducer {
         ezSysLogininfor.setUserName(userName);
         ezSysLogininfor.setUserType(userType);
         ezSysLogininfor.setBrowser(browser);
-        ezSysLogininfor.setCreateTime(new Date());
+        ezSysLogininfor.setCreateTime(LocalDateTime.now());
         // 使用rabbitmq投递消息
         amqpTemplate.convertAndSend(RabbitMQConfig.EZCOINS_USERLOGIN_QUEUE, "", ezSysLogininfor);
         log.info(">>>会员服务登录后续，投递消息到mq成功.<<<");
