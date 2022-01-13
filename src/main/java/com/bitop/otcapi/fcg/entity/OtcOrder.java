@@ -59,10 +59,10 @@ public class OtcOrder extends BaseEntity implements Serializable {
     private BigDecimal maximumLimit;
 
     @ApiModelProperty(value = "广告类型(0:买  1：卖)")
-    private String type;
+    private Integer type;
 
     @ApiModelProperty(value = "是否为接单广告(0:是 1：否)")
-    private String isAdvertising;
+    private Integer isAdvertising;
 
     @ApiModelProperty(value = "支付方式1ID")
     private Integer paymentMethod1;
@@ -86,7 +86,7 @@ public class OtcOrder extends BaseEntity implements Serializable {
     private String tradingTips;
 
     @ApiModelProperty(value = "订单状态（0：正常 1：已下架）")
-    private String status;
+    private Integer status;
 
     @ApiModelProperty(value = "订单完成时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

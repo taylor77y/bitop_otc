@@ -27,7 +27,7 @@ public class OtcOrderAppeal extends BaseEntity implements Serializable {
     private String userId;
 
     @ApiModelProperty(value = "申诉类型 1:对方未付款 2：对方未放行 3:其他")
-    private String type;
+    private Integer type;
 
     @ApiModelProperty(value = "申诉理由")
     private String reason;
@@ -39,7 +39,7 @@ public class OtcOrderAppeal extends BaseEntity implements Serializable {
     private String orderMatchNo;
 
     @ApiModelProperty(value = "审核状态(1:等待处理 2：取消申诉 3：申诉失败 4：申诉成功)")
-    private String status;
+    private Integer status;
 
     @ApiModelProperty(value = "审核人")
     private String examineBy;

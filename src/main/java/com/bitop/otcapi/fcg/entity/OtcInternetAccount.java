@@ -47,9 +47,9 @@ public class OtcInternetAccount extends BaseEntity implements Serializable {
     private String internetAccountNumber;
 
     @ApiModelProperty(value = "网络账号类型 0微信 1QQ 2支付宝 3微博 4抖音 5陌陌 6豆瓣 7百度贴吧 8小红书 9优酷 10大众点评 11钉钉 12华为id 13apple id",required = true)
-    private String internetAccountType;
+    private Integer internetAccountType;
 
     @ApiModelProperty(value = "状态(0:已激活 1：未激活)",required = true)
     @NotBlank(message = "请先选择状态")
-    private String status;
+    private Integer status;
 }

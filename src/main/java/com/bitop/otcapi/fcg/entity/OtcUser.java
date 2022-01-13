@@ -65,17 +65,17 @@ public class OtcUser extends BaseEntity implements Serializable {
     private String inviteCode;//----------------------
 
     @ApiModelProperty(value = "高级认证：0：已认证 1：未认证")
-    private String level;
+    private Integer level;
 
     @ApiModelProperty(value = "状态：0已认证 1未认证")
-    private String kycStatus;
+    private Integer kycStatus;
 
     @ApiModelProperty(value = "状态 0 正常 1禁止")
-    private String status;
+    private Integer status;
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableLogic(value = "0",delval = "1")
-    private String isDeleted;
+    private Integer isDeleted;
 
     @ApiModelProperty(value = "最后登录IP")//mysql IP 保存为整数，使用mysql函数
     private String loginIp;
@@ -85,19 +85,19 @@ public class OtcUser extends BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "登录状态  0：未封号 1：已封号")
     @TableField(exist = false)
-    private String login;
+    private Integer login;
 
     @ApiModelProperty(value = "提现状态  0：未封号 1：已封号")
     @TableField(exist = false)
-    private String withdraw;
+    private Integer withdraw;
 
     @ApiModelProperty(value = "发布广告封禁 提现状态  0：未封号 1：已封号")
     @TableField(exist = false)
-    private String orders;
+    private Integer orders;
 
     @ApiModelProperty(value = "买卖封禁 提现状态  0：未封号 1：已封号")
     @TableField(exist = false)
-    private String business;
+    private Integer business;
 
 
 }

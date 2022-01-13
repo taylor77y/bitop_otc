@@ -47,9 +47,9 @@ public class OtcPaymentMethod extends BaseEntity implements Serializable {
     private String paymentQrCode;
 
     @ApiModelProperty(value = "状态(0:已激活 1：未激活)")
-    private String status;
+    private Integer status;
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除，0（false）未删除")
     @TableLogic(value = "0",delval = "1")
-    private String isDeleted;
+    private Integer isDeleted;
 }

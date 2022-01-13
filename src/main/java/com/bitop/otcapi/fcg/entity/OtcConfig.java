@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -42,7 +43,7 @@ public class OtcConfig extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "商户保证金")
     @Size(min = 10, max = 5000, message
             = "advertisingBusinessMargin must be between 10 and 5000 amount")
-    private Integer advertisingBusinessMargin;
+    private BigDecimal advertisingBusinessMargin;
 
     @ApiModelProperty(value = "接单时间限制（分钟)")
     @NotBlank(message = "请先选择限制接单时间（分钟）")

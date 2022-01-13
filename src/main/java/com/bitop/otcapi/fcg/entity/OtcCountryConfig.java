@@ -45,7 +45,7 @@ public class OtcCountryConfig extends BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除，0（false）未删除")
     @TableLogic(value = "0",delval = "1")
-    private String isDeleted;
+    private Integer isDeleted;
 
 
 }

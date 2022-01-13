@@ -28,10 +28,10 @@ public class OtcConfigNext extends BaseEntity implements Serializable {
     private String id;
 
     @ApiModelProperty(value = "卖方KYC等级 0:无认证 1：基础认证 2：高级认证")
-    private short sellKycLevel;
+    private Integer sellKycLevel;
 
     @ApiModelProperty(value = "买方KYC等级 0:无认证 1：基础认证 2：高级认证")
-    private short buyKycLevel;
+    private Integer buyKycLevel;
 
     @ApiModelProperty(value = "支持的数字币币种",required = true)
     private String digitalCurrency;
@@ -52,5 +52,5 @@ public class OtcConfigNext extends BaseEntity implements Serializable {
     @NotBlank(message = "请先选择限制提现天数")
     @Max(100)
     @Min(1)
-    private short limitWithdrawDays;
+    private Integer limitWithdrawDays;
 }

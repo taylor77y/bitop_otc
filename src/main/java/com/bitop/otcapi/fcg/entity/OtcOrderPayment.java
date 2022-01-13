@@ -47,6 +47,6 @@ public class OtcOrderPayment extends BaseEntity implements Serializable {
     private Integer paymentMethodId;
 
     @ApiModelProperty(value = " 0：发布订单  1：匹配订单")
-    private String type;
+    private Integer type;
 
 }
