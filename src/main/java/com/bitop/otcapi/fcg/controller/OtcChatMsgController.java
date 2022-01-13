@@ -27,6 +27,9 @@ public class OtcChatMsgController {
     @PostMapping("chatMsg/{orderMatchNo}")
 //    @AuthToken
     public ResponseList<OtcChatMsg> advertisingBusinessList(@PathVariable String orderMatchNo) {
-        return ResponseList.success(otcChatMsgService.pageByNo(orderMatchNo));
+//        return ResponseList.success(otcChatMsgService.pageByNo(orderMatchNo));
+        LambdaQueryWrapper<OtcChatMsg> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(OtcChatMsg::getOrderMatchNo,orderMatchNo);
+        return ResponseList.success(otcChatMsgService.list(queryWrapper));
     }
 }
