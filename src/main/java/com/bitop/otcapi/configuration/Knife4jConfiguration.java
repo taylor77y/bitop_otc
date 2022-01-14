@@ -63,7 +63,7 @@ public class Knife4jConfiguration {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("bitop项目OTC交易所接口文档(王)")
+                .title("bitop项目otc交易所接口文档(王)")
                 .description("本 api 提供了bitop app  包括前端 后端 所需接口（有需要请联系：永锋）")
                 .termsOfServiceUrl("http://localhost:8080/")
                 .contact("xx@qq.com")
