@@ -21,7 +21,7 @@ public class CoinConstants {
         TRANSFERIN("transferin", "转入"),
         /** 转出 **/
         TRANSFEROUT("transferout", "转出"),
-        FREE("free","手续费"),
+        FEE("fee","手续费"),
         /** 冻结 **/
         FROZEN("frozen", "冻结"),
         /** 解冻 **/
