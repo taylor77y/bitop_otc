@@ -28,7 +28,7 @@ public class OtcCoinConfig extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "币种名称")
     private String coinName;
 
-    @ApiModelProperty(value = "交易类型：在线购买、卖出")
+    @ApiModelProperty(value = "交易类型：0在线购买、1卖出")
     private String transactionType;
 
     @ApiModelProperty(value = "十进制金额")
