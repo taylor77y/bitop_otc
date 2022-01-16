@@ -40,6 +40,9 @@ public class OtcPaymentMethod extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "银行地址")
     private String optional;
 
+    @ApiModelProperty(value = "账户名")
+    private String accountName;
+
     @ApiModelProperty(value = "账号")
     private String accountNumber;
 

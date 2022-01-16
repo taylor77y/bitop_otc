@@ -3,7 +3,7 @@ package com.bitop.otcapi.constant;
 /**
  * @Author: taylor
  * @Email: taylor77y@gmail.com
- * @Description: 1:接单已取消 2:待接单 3：已取消 4：等待支付 5：已支付 6：已完成
+ * @Description: 1:接单已取消 2:待接单 3：已取消 4：等待支付 5：等待确认到款 6：已完成 7：接单拒绝 8：申诉中
  * @Date:2022/01/01 14:44
  * @Version:2.0
  */

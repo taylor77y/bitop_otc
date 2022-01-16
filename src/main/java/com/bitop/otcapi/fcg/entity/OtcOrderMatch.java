@@ -73,7 +73,7 @@ public class OtcOrderMatch extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "总价")
     private BigDecimal totalPrice;
 
-    @ApiModelProperty(value = "价格")
+    @ApiModelProperty(value = "价格")//单价
     private BigDecimal price;
 
     @ApiModelProperty(value = "国际货币")
@@ -82,7 +82,7 @@ public class OtcOrderMatch extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "订单状态(1:接单已取消 2:待接单 3：已取消 4：等待支付 5：已支付 6：已完成 7:申诉)")
     private String status;
 
-    @ApiModelProperty(value = "币种类型")
+    @ApiModelProperty(value = "币种类型")//币种名
     private String coinName;
 
     @ApiModelProperty(value = "订单到期时间")

@@ -37,7 +37,7 @@ public class OtcCountryConfig extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "国家电话区号")
     private String countryTelCode;
 
-    @ApiModelProperty(value = "国旗地址")
+    @ApiModelProperty(value = "国旗图标url地址")
     private String nationalFlagAddr;
 
     @ApiModelProperty(value = "排序")

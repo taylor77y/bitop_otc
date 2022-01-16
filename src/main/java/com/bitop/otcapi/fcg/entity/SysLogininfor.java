@@ -15,7 +15,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="SysLogininfor对象", description="登录日志")
 @TableName("sys_logininfor")
-public class SysLogininfor implements Serializable {
+public class SysLogininfor extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -44,10 +44,10 @@ public class SysLogininfor implements Serializable {
     @ApiModelProperty(value = "操作系统")
     private String os;
 
-    @ApiModelProperty(value = "创建时间")
-    @TableField(fill = FieldFill.INSERT)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+//    @ApiModelProperty(value = "创建时间")
+//    @TableField(fill = FieldFill.INSERT)
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime createTime;
 
 
 }

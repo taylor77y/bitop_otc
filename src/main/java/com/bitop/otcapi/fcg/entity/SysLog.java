@@ -15,7 +15,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="SysLog对象", description="系统日志（记录修改数据库表的操作日志）")
 @TableName("sys_log")
-public class SysLog implements Serializable {
+public class SysLog extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -65,10 +65,10 @@ public class SysLog implements Serializable {
     @ApiModelProperty(value = "错误消息")
     private String errorMsg;
 
-    @ApiModelProperty(value = "创建时间")
-    @TableField(fill = FieldFill.INSERT)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+//    @ApiModelProperty(value = "创建时间")
+//    @TableField(fill = FieldFill.INSERT)
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime createTime;
 
 
 

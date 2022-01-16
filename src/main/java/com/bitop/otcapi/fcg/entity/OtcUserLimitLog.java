@@ -18,7 +18,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 @TableName("ez_user_limit_log")
 @ApiModel(value="EzUserLimitLog对象", description="封号日志记录表")
-public class OtcUserLimitLog implements Serializable {
+public class OtcUserLimitLog extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -48,13 +48,13 @@ public class OtcUserLimitLog implements Serializable {
     @ApiModelProperty(value = "是否过期 1（true）已过期 ，0（false）未过期")
     private String isExpire;
 
-    @ApiModelProperty(value = "封号操作者")
+    /*@ApiModelProperty(value = "封号操作者")
     private String createBy;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+    private LocalDateTime createTime;*/
 
     @ApiModelProperty(value = "封号到期时间（null：永久封号）")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

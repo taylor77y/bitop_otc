@@ -44,7 +44,7 @@ public class OtcConfigNext extends BaseEntity implements Serializable {
             = "fee must be between 10 and 20 int")
     private BigDecimal fee;
 
-    @ApiModelProperty(value = "收款二维码类型id：1：银行  2：支付宝 3：微信 4：现金面交")
+    @ApiModelProperty(value = "收款方式类型id：1：银行  2：支付宝 3：微信 4：现金面交")
     @NotBlank(message = "请先选择收款方式")
     private Integer paymentMethodId;
 
