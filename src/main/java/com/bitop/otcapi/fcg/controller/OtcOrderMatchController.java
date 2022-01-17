@@ -1,5 +1,11 @@
 package com.bitop.otcapi.fcg.controller;
 
+import com.bitop.otcapi.aspectj.lang.annotation.AuthToken;
+import com.bitop.otcapi.aspectj.lang.annotation.Log;
+import com.bitop.otcapi.aspectj.lang.annotation.NoRepeatSubmit;
+import com.bitop.otcapi.constant.BusinessType;
+import com.bitop.otcapi.constant.LimitType;
+import com.bitop.otcapi.constant.OperatorType;
 import com.bitop.otcapi.fcg.entity.OtcOrderMatch;
 import com.bitop.otcapi.fcg.entity.SearchModel;
 import com.bitop.otcapi.fcg.entity.req.PlaceOrderReqDto;
@@ -25,7 +31,7 @@ public class OtcOrderMatchController {
     @Autowired
     private OtcOrderService orderService;
 
-//    @AuthToken
+    @AuthToken
     @ApiOperation(value = "OTC 匹配订单列表")
     @PostMapping("otcOrderList")
     public ResponsePageList<OtcOrderMatch> otcOrderList(@RequestBody SearchModel<OtcOrderMatch> searchModel) {
@@ -34,44 +40,44 @@ public class OtcOrderMatchController {
 
 
 
-    //    @NoRepeatSubmit
+    @NoRepeatSubmit
     @ApiOperation(value = "用户根据订单号下单购买/出售")
     @PostMapping("placeAnOrder")
-//    @AuthToken(kyc = true,LIMIT_TYPE = LimitType.BUSINESSLIMIT)
-//    @Log(title = "下单", businessType = BusinessType.INSERT, operatorType = OperatorType.MOBILE)
+    @AuthToken(kyc = true,LIMIT_TYPE = LimitType.BUSINESSLIMIT)
+    @Log(title = "下单", businessType = BusinessType.INSERT, operatorType = OperatorType.MOBILE)
     public Response<PaymentDetailsRespDto> placeAnOrder(@RequestBody PlaceOrderReqDto placeOrderReqDto) {
         return orderService.placeAnOrder(placeOrderReqDto);
     }
 
 
-//    @NoRepeatSubmit
+    @NoRepeatSubmit
     @ApiOperation(value = "用户 取消订单（两个状态可取消订单  1：接单广告（卖家未接受订单）用户免费取消 " +
             "2：接单广告/普通广告（用户未支付状态） 用户取消次数增加）")
     @ApiImplicitParam(name = "matchOrderNo",value = "matchOrderNo",required = true)
     @PutMapping("cancelOrder/{matchOrderNo}")
-//    @AuthToken
-//    @Log(title = "用户 取消订单", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)
+    @AuthToken
+    @Log(title = "用户 取消订单", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)
     public Response cancelOrder(@PathVariable String matchOrderNo) {
         return orderMatchService.cancelOrder(matchOrderNo);
     }
 
-//    @NoRepeatSubmit
+    @NoRepeatSubmit
     @ApiOperation(value = "买家确认付款")
     @ApiImplicitParam(name = "matchOrderNo",value = "matchOrderNo",required = true)
     @PutMapping("confirmPayment/{matchOrderNo}")
-//    @AuthToken
-//    @Log(title = "买家确认付款", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)
+    @AuthToken
+    @Log(title = "买家确认付款", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)
     public Response confirmPayment(@PathVariable String matchOrderNo) {
         return orderMatchService.confirmPayment(matchOrderNo);
     }
 
 
-//    @NoRepeatSubmit
+    @NoRepeatSubmit
     @ApiOperation(value = "卖家放款")
     @ApiImplicitParam(name = "matchOrderNo",value = "matchOrderNo",required = true)
     @PutMapping("sellerPut/{matchOrderNo}")
-//    @AuthToken
-//    @Log(title = "卖家放款", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)
+    @AuthToken
+    @Log(title = "卖家放款", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)
     public Response sellerPut(@PathVariable String matchOrderNo) {
         return orderMatchService.sellerPut(matchOrderNo,false);
     }

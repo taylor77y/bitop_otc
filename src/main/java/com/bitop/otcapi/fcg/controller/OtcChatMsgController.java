@@ -1,6 +1,7 @@
 package com.bitop.otcapi.fcg.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.bitop.otcapi.aspectj.lang.annotation.AuthToken;
 import com.bitop.otcapi.fcg.entity.OtcChatMsg;
 import com.bitop.otcapi.fcg.service.OtcChatMsgService;
 import com.bitop.otcapi.response.ResponseList;
@@ -25,7 +26,7 @@ public class OtcChatMsgController {
     @ApiOperation(value = "根据 匹配订单id查询聊天记录")
     @ApiImplicitParam(name = "orderMatchNo",value = "orderMatchNo",required = true)
     @PostMapping("chatMsg/{orderMatchNo}")
-//    @AuthToken
+    @AuthToken
     public ResponseList<OtcChatMsg> advertisingBusinessList(@PathVariable String orderMatchNo) {
 //        return ResponseList.success(otcChatMsgService.pageByNo(orderMatchNo));
         LambdaQueryWrapper<OtcChatMsg> queryWrapper=new LambdaQueryWrapper<>();

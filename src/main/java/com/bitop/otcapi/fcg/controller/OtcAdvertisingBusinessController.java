@@ -81,9 +81,9 @@ public class OtcAdvertisingBusinessController {
             return Response.error(MessageUtils.message("请先完善otc交易信息"),700);
         }
         OtcUser user = userService.getById(userId1);
-        String kycStatus = user.getKycStatus();
+        String kycStatus = user.getKycStatus().toString();
 
-        String level = user.getLevel();
+        String level = user.getLevel().toString();
         MerchantsBussinessStatsRespDto merchantsBussinessStatsRespDto = new MerchantsBussinessStatsRespDto();
         BeanUtils.copyProperties(one, merchantsBussinessStatsRespDto);
         merchantsBussinessStatsRespDto.setKycStatus(kycStatus);

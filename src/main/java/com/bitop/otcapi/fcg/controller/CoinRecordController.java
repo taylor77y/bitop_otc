@@ -1,5 +1,6 @@
 package com.bitop.otcapi.fcg.controller;
 
+import com.bitop.otcapi.aspectj.lang.annotation.AuthToken;
 import com.bitop.otcapi.fcg.entity.CoinRecord;
 import com.bitop.otcapi.fcg.entity.SearchModel;
 import com.bitop.otcapi.fcg.service.CoinRecordService;
@@ -21,7 +22,7 @@ public class CoinRecordController {
     private CoinRecordService recordService;
 
     @ApiOperation(value = "资产流水")
-//    @AuthToken
+    @AuthToken
     @PostMapping("assetTurnover")
     public ResponsePageList<CoinRecord> assetTurnover(@RequestBody SearchModel<CoinRecord> searchModel) {
         return ResponsePageList.success(recordService.page(searchModel.getPage(), searchModel.getQueryModel()));

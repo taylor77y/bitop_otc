@@ -1,5 +1,6 @@
 package com.bitop.otcapi.fcg.controller;
 
+import com.bitop.otcapi.aspectj.lang.annotation.AuthToken;
 import com.bitop.otcapi.fcg.entity.CoinAccount;
 import com.bitop.otcapi.fcg.entity.SearchModel;
 import com.bitop.otcapi.fcg.service.CoinAccountService;
@@ -22,7 +23,7 @@ public class CoinAccountController {
 
     @ApiOperation(value = "资产列表")
     @PostMapping("/accountList")
-//    @AuthToken
+    @AuthToken
     public ResponsePageList<CoinAccount> accountList(@RequestBody SearchModel<CoinAccount> searchModel){
         return ResponsePageList.success(accountService.page(searchModel.getPage(), searchModel.getQueryModel()));
     }

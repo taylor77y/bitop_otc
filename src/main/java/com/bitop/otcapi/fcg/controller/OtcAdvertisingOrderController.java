@@ -2,6 +2,12 @@ package com.bitop.otcapi.fcg.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bitop.otcapi.aspectj.lang.annotation.AuthToken;
+import com.bitop.otcapi.aspectj.lang.annotation.Log;
+import com.bitop.otcapi.aspectj.lang.annotation.NoRepeatSubmit;
+import com.bitop.otcapi.constant.BusinessType;
+import com.bitop.otcapi.constant.LimitType;
+import com.bitop.otcapi.constant.OperatorType;
 import com.bitop.otcapi.context.ContextHandler;
 import com.bitop.otcapi.fcg.entity.OtcOrder;
 import com.bitop.otcapi.fcg.entity.SearchModel;
@@ -29,7 +35,7 @@ public class OtcAdvertisingOrderController {
     private OtcOrderService otcOrderService;
 
 
-//    @AuthToken
+    @AuthToken
     @ApiOperation(value = "OTC-广告订单列表")
     @PostMapping("otcOrderList")
     public ResponsePageList<OtcOrder> otcOrderList(@RequestBody SearchModel<OtcOrder> searchModel){
@@ -37,22 +43,22 @@ public class OtcAdvertisingOrderController {
     }
 
 
-//    @NoRepeatSubmit
+    @NoRepeatSubmit
     @ApiOperation(value = "发布广告订单")
     @PostMapping("releaseAdvertisingOrder")
-//    @AuthToken(kyc = true,LIMIT_TYPE = LimitType.ORDERLIMIT)
-//    @Log(title = "发布广告订单", businessType = BusinessType.INSERT, operatorType = OperatorType.MOBILE)
+    @AuthToken(kyc = true,LIMIT_TYPE = LimitType.ORDERLIMIT)
+    @Log(title = "发布广告订单", businessType = BusinessType.INSERT, operatorType = OperatorType.MOBILE)
     public Response releaseAdvertisingOrder(@RequestBody @Validated OtcOrderReqDto otcOrderReqDto) {
-//        otcOrderReqDto.setUserId(ContextHandler.getUserId());
+        otcOrderReqDto.setUserId(ContextHandler.getUserId());
         return otcOrderService.releaseAdvertisingOrder(otcOrderReqDto);
     }
 
-//    @NoRepeatSubmit
+    @NoRepeatSubmit
     @ApiOperation(value = "商户-下架广告订单")
     @ApiImplicitParam(name = "orderNo",value = "orderNo",required = true)
     @PutMapping("offShelfOrder/{orderNo}")
-//    @AuthToken
-//    @Log(title = "商户 下架广告订单", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)
+    @AuthToken
+    @Log(title = "商户 下架广告订单", businessType = BusinessType.UPDATE, operatorType = OperatorType.MOBILE)
     public Response offShelfOrder(@PathVariable String orderNo) {
         return otcOrderService.offShelfOrder(orderNo);
     }
