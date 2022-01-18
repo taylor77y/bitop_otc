@@ -22,10 +22,10 @@ public class RabbitMQConfiguration {
     public  final static String routingKeyOrder = "routing_key_order";
 
     //死信消息队列名称
-    public  final static String dealQueueOrder = "deal_queue_order";
+    public  final static String deadQueueOrder = "dead_queue_order";
 
     //死信交换机名称
-    public  final static String dealExchangeOrder = "deal_exchange_order";
+    public  final static String deadExchangeOrder = "dead_exchange_order";
 
     //死信 routingKey
     public final static String deadRoutingKeyOrder = "dead_routing_key_order";
@@ -43,7 +43,7 @@ public class RabbitMQConfiguration {
         Map<String, Object> args = new HashMap<>(2);
         //args.put("x-message-ttl", 5 * 1000);//直接设置 Queue 延迟时间 但如果直接给队列设置过期时间,这种做法不是很灵活
         //这里采用发送消息动态设置延迟时间,这样我们可以灵活控制
-        args.put(DEAD_LETTER_QUEUE_KEY, dealExchangeOrder);
+        args.put(DEAD_LETTER_QUEUE_KEY, deadExchangeOrder);
         args.put(DEAD_LETTER_ROUTING_KEY, deadRoutingKeyOrder);
         return new Queue(RabbitMQConfiguration.orderQueue, true, false, false, args);
     }
@@ -63,14 +63,14 @@ public class RabbitMQConfiguration {
     //创建配置死信队列
     @Bean
     public Queue deadQueueOrder() {
-        Queue queue = new Queue(dealQueueOrder, true);
+        Queue queue = new Queue(deadQueueOrder, true);
         return queue;
     }
 
     //创建死信交换机
     @Bean
     public DirectExchange deadExchangeOrder() {
-        return new DirectExchange(dealExchangeOrder);
+        return new DirectExchange(deadExchangeOrder);
     }
 
     //死信队列与死信交换机绑定
