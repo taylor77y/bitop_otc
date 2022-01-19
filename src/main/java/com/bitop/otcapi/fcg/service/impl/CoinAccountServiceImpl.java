@@ -11,11 +11,13 @@ import com.bitop.otcapi.exception.AccountOperationBusyException;
 import com.bitop.otcapi.fcg.entity.CoinAccount;
 import com.bitop.otcapi.fcg.entity.CoinRecord;
 import com.bitop.otcapi.fcg.entity.CoinType;
+import com.bitop.otcapi.fcg.entity.OtcUser;
 import com.bitop.otcapi.fcg.entity.vo.BalanceChange;
 import com.bitop.otcapi.fcg.mapper.CoinAccountMapper;
 import com.bitop.otcapi.fcg.service.CoinAccountService;
 import com.bitop.otcapi.fcg.service.CoinRecordService;
 import com.bitop.otcapi.fcg.service.CoinTypeService;
+import com.bitop.otcapi.fcg.service.OtcUserService;
 import com.bitop.otcapi.redis.CacheUtils;
 import com.bitop.otcapi.util.SpringUtils;
 import com.bitop.otcapi.websocket.WebSocketHandle;
@@ -31,6 +33,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +51,9 @@ public class CoinAccountServiceImpl extends ServiceImpl<CoinAccountMapper, CoinA
 
     @Autowired
     private CacheUtils cacheUtils;
+
+    @Autowired
+    private OtcUserService userService;
 
 
     @Override
@@ -68,12 +74,12 @@ public class CoinAccountServiceImpl extends ServiceImpl<CoinAccountMapper, CoinA
 
             String userName= ContextHandler.getUserName();
             if (StringUtils.isEmpty(userName)){
-//                EzUser byId = userService.getById(c.getUserId());
-//                if (byId==null){
-//                    log.error("参数异常{}",c.getUserId());
-//                    return false;
-//                }
-//                userName=byId.getUserName();
+                OtcUser byId = userService.getById(c.getUserId());
+                if (byId==null){
+                    log.error("参数异常{}",c.getUserId());
+                    return false;
+                }
+                userName=byId.getUserName();
             }
             CoinAccount acc = getAccountByUserIdAndCoinId(c.getUserId(), c.getCoinName(), userName); //通过用户id和币种id查询账户
             if (StringUtils.isEmpty(acc)) {
@@ -206,14 +212,14 @@ public class CoinAccountServiceImpl extends ServiceImpl<CoinAccountMapper, CoinA
                                 queryWrapper.eq(CoinAccount::getCoinName, coin.getCoinName());
                                 CoinAccount account = baseMapper.selectOne(queryWrapper);//通过用户id和币种id查询账户
                                 if (account == null && CoinStatus.ENABLE.getCode().equals(coin.getStatus())) {/** 币种状态（0启用 1禁用 ） */
-                                    Date d = new Date();
+//                                    Date d = new Date();
                                     account = new CoinAccount();
                                     //封装新账户数据
                                     account.setUserId(userId);
                                     account.setCoinId(coin.getId());
                                     account.setCoinName(coin.getCoinName());
-                                    account.setCreateTime(d);
-                                    account.setUpdateTime(d);
+                                    account.setCreateTime(LocalDateTime.now());
+                                    account.setUpdateTime(LocalDateTime.now());
                                     account.setCreateBy(userName);
                                     baseMapper.insert(account);//添加账户数据
                                     accountList.add(account);//将创建好的账户放入集合
