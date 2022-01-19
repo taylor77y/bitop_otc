@@ -99,4 +99,24 @@ public class JWTHelper {
                 .compact();
         return compactJws;
     }
+
+
+    public String getToken(HttpServletRequest request) {
+        String token = request.getHeader(tokenProperties.getHeader());
+        if (StringUtils.hasLength(token) && token.startsWith(Constants.TOKEN_PREFIX)) {
+            token = token.replace(Constants.TOKEN_PREFIX, "");
+        }
+        return token;
+    }
+
+    /**
+     * 验证token是否过期
+     */
+    public boolean verifyToken(IJWTInfo jwtInfo,String token) {
+        String redisToken= redisCache.getCacheObject(RedisConstants.LOGIN_USER_KEY + jwtInfo.getUserId() + "_" + jwtInfo.getUserType());
+        if (StringUtils.isEmpty(redisToken)) {
+            return false;
+        }
+        return token.equals(redisToken);
+    }
 }
