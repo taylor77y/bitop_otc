@@ -14,6 +14,7 @@ import com.bitop.otcapi.util.BeanUtils;
 import com.bitop.otcapi.util.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
@@ -30,6 +31,7 @@ public class OtcPaymentMethodServiceImpl extends ServiceImpl<OtcPaymentMethodMap
      * @Date: 2021/12/15
      */
     @Override
+    @Transactional
     public Response alipayPaymentMethod(PaymentMethodReqDto paymentMethodReqDto) {
         if (paymentMethodReqDto.getPaymentMethodId() == PaymentMethod.BANK.getCode()) {
             if (StringUtils.isEmpty(paymentMethodReqDto.getBankName())) {

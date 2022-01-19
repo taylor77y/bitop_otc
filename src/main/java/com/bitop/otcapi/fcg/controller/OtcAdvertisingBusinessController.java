@@ -110,7 +110,7 @@ public class OtcAdvertisingBusinessController {
         //总成交笔数
         q = new LambdaQueryWrapper<OtcOrderMatch>();
         q.eq(OtcOrderMatch::getOtcOrderUserId, userId1);
-        q.eq(OtcOrderMatch::getStatus, MatchOrderStatus.COMPLETED);
+        q.eq(OtcOrderMatch::getStatus, MatchOrderStatus.COMPLETED.getCode());
         merchantsBussinessStatsRespDto.setGrandTotal(orderMatchService.count(q));
 
         //总买入资产（计算买入的数字货币）

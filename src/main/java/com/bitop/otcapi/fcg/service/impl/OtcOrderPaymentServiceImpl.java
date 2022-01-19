@@ -51,10 +51,10 @@ public class OtcOrderPaymentServiceImpl extends ServiceImpl<OtcOrderPaymentMappe
             ezOtcOrderPayment.setBankName(e.getBankName());
             ezOtcOrderPayment.setRealName(e.getRealName());
             if (StringUtils.hasText(orderNo)){
-                ezOtcOrderPayment.setType("0");
+                ezOtcOrderPayment.setType(0);
                 ezOtcOrderPayment.setOrderNo(orderNo);
             }else {
-                ezOtcOrderPayment.setType("1");
+                ezOtcOrderPayment.setType(1);
                 ezOtcOrderPayment.setOrderMatchNo(orderMatchNo);
             }
             list1.add(ezOtcOrderPayment);

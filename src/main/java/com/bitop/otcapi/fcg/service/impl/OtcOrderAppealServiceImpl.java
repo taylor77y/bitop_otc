@@ -11,6 +11,8 @@ import com.bitop.otcapi.fcg.entity.OtcBankCard;
 import com.bitop.otcapi.fcg.entity.OtcOrderAppeal;
 import com.bitop.otcapi.fcg.entity.OtcOrderMatch;
 import com.bitop.otcapi.fcg.entity.req.AppealReqDto;
+import com.bitop.otcapi.fcg.entity.req.DoAppealReqDto;
+import com.bitop.otcapi.fcg.entity.req.DoOrderReqDto;
 import com.bitop.otcapi.fcg.mapper.OtcBankCardMapper;
 import com.bitop.otcapi.fcg.mapper.OtcOrderAppealMapper;
 import com.bitop.otcapi.fcg.service.OtcBankCardService;
@@ -62,10 +64,11 @@ public class OtcOrderAppealServiceImpl extends ServiceImpl<OtcOrderAppealMapper,
         BeanUtils.copyProperties(appealReqDto, ezOtcOrderAppeal);
         ezOtcOrderAppeal.setCreateBy(ContextHandler.getUserName());
         ezOtcOrderAppeal.setUserId(userId);
+        ezOtcOrderAppeal.setStatus(1);
         baseMapper.insert(ezOtcOrderAppeal);
         //修改订单申诉状态
-        if ("1".equals(orderMatch.getIsAppeal())) {
-            orderMatch.setIsAppeal("0");
+        if (orderMatch.getIsAppeal()==1) {
+            orderMatch.setIsAppeal(0);
             orderMatch.setStatus(MatchOrderStatus.APPEALING.getCode());
             matchService.updateById(orderMatch);
         }
@@ -119,8 +122,55 @@ public class OtcOrderAppealServiceImpl extends ServiceImpl<OtcOrderAppealMapper,
             AsyncManager.me().execute(AsyncFactory.sendSysChat(orderMatch.getUserId(), orderMatch.getOtcOrderUserId(), orderMatchNo,
                     SysOrderConstants.SysChatMsg.APPEAL_OFF, MatchOrderStatus.PAID));
         }
-        ezOtcOrderAppeal.setStatus("2");
+        ezOtcOrderAppeal.setStatus(2);
         baseMapper.updateById(ezOtcOrderAppeal);
+        return Response.success();
+    }
+
+
+    /**
+     * 处理投诉
+     *
+     * @param doAppealReqDto
+     * @return
+     */
+    @Override
+    public Response doAppeal(DoAppealReqDto doAppealReqDto) {
+        //判断申诉状态
+        OtcOrderAppeal ezOtcOrderAppeal = baseMapper.selectById(doAppealReqDto.getId());
+        if (!"1".equals(ezOtcOrderAppeal.getStatus())) {
+            return Response.error("申诉状态已发生变化");
+        }
+        ezOtcOrderAppeal.setStatus(Integer.parseInt(doAppealReqDto.getStatus()));
+        ezOtcOrderAppeal.setExamineBy(ContextHandler.getUserName());
+        ezOtcOrderAppeal.setMemo(doAppealReqDto.getMemo());
+        baseMapper.updateById(ezOtcOrderAppeal);
+        return Response.success();
+    }
+
+    /**
+     * 处理投诉订单
+     *
+     * @param orderReqDto
+     * @return
+     */
+    @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Response doOrder(DoOrderReqDto orderReqDto) {
+        //根据订单号查询是否还有未处理完的投诉
+        String orderMatchNo = orderReqDto.getOrderMatchNo();
+        LambdaQueryWrapper<OtcOrderAppeal> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OtcOrderAppeal::getOrderMatchNo, orderMatchNo);
+        queryWrapper.eq(OtcOrderAppeal::getStatus, "1");
+        Integer integer = baseMapper.selectCount(queryWrapper);
+        if (integer > 0) {
+            return Response.error("请先处理完当前订单的申诉");
+        }
+        if ("0".equals(orderReqDto.getStatus())) {//放行
+            matchService.sellerPut(orderMatchNo, true);
+        } else {//订单取消
+            matchService.paymentFail(orderMatchNo);
+        }
         return Response.success();
     }
 }

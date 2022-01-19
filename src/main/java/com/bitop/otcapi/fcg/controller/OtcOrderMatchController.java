@@ -8,11 +8,14 @@ import com.bitop.otcapi.constant.LimitType;
 import com.bitop.otcapi.constant.OperatorType;
 import com.bitop.otcapi.fcg.entity.OtcOrderMatch;
 import com.bitop.otcapi.fcg.entity.SearchModel;
+import com.bitop.otcapi.fcg.entity.req.AdMatchOrderQueryReqDto;
 import com.bitop.otcapi.fcg.entity.req.PlaceOrderReqDto;
+import com.bitop.otcapi.fcg.entity.resp.OrderRecordRespDto;
 import com.bitop.otcapi.fcg.entity.resp.PaymentDetailsRespDto;
 import com.bitop.otcapi.fcg.service.OtcOrderMatchService;
 import com.bitop.otcapi.fcg.service.OtcOrderService;
 import com.bitop.otcapi.response.Response;
+import com.bitop.otcapi.response.ResponseList;
 import com.bitop.otcapi.response.ResponsePageList;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -83,4 +86,10 @@ public class OtcOrderMatchController {
     }
 
 
+    @ApiOperation(value = "广告订单匹配订单")
+    @PostMapping("adMatchOrder")
+    @AuthToken
+    public ResponseList<OrderRecordRespDto> adMatchOrder(@RequestBody AdMatchOrderQueryReqDto matchOrderQueryReqDto) {
+        return orderMatchService.adMatchOrder(matchOrderQueryReqDto);
+    }
 }

@@ -3,12 +3,17 @@ package com.bitop.otcapi.fcg.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bitop.otcapi.constant.LimitType;
 import com.bitop.otcapi.constant.LoginType;
 import com.bitop.otcapi.exception.UserException;
 import com.bitop.otcapi.exception.UserPasswordNotMatchException;
 import com.bitop.otcapi.fcg.entity.OtcUser;
+import com.bitop.otcapi.fcg.entity.OtcUserLimit;
+import com.bitop.otcapi.fcg.entity.OtcUserLimitLog;
 import com.bitop.otcapi.fcg.entity.req.JwtAuthenticationRequest;
 import com.bitop.otcapi.fcg.mapper.OtcUserMapper;
+import com.bitop.otcapi.fcg.service.OtcUserLimitLogService;
+import com.bitop.otcapi.fcg.service.OtcUserLimitService;
 import com.bitop.otcapi.fcg.service.OtcUserService;
 import com.bitop.otcapi.mq.producer.LoginProducer;
 import com.bitop.otcapi.security.JWTHelper;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +41,12 @@ public class OtcUserServiceImpl extends ServiceImpl<OtcUserMapper, OtcUser> impl
 
     @Autowired
     private LoginProducer loginProducer;
+
+    @Autowired
+    private OtcUserLimitLogService limitLogService;
+
+    @Autowired
+    private OtcUserLimitService limitService;
 
     /**
      * 用户登录
@@ -53,25 +65,25 @@ public class OtcUserServiceImpl extends ServiceImpl<OtcUserMapper, OtcUser> impl
         if (ezUser == null) {
             throw new UserException("登录用户不存在", null);
         }
-        /*LambdaQueryWrapper<EzUserLimitLog> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(EzUserLimitLog::getIsExpire, "0");
-        queryWrapper.eq(EzUserLimitLog::getUserId, ezUser.getUserId());
-        queryWrapper.eq(EzUserLimitLog::getType, LimitType.LOGINLIMIT.getCode());
-        EzUserLimitLog one = limitLogService.getOne(queryWrapper);
+        LambdaQueryWrapper<OtcUserLimitLog> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OtcUserLimitLog::getIsExpire, "0");
+        queryWrapper.eq(OtcUserLimitLog::getUserId, ezUser.getUserId());
+        queryWrapper.eq(OtcUserLimitLog::getType, LimitType.LOGINLIMIT.getCode());
+        OtcUserLimitLog one = limitLogService.getOne(queryWrapper);
         if (one != null) {
-            if (one.getBanTime() != null && one.getBanTime().getTime() < DateUtils.getNowDate().getTime()) {
+            if (one.getBanTime() != null && one.getBanTime().toInstant(ZoneOffset.of("+8")).toEpochMilli() < new Date().getTime()) {
                 one.setIsExpire("1");
                 limitLogService.updateById(one);
-                ezUser.setStatus("0");
+                ezUser.setStatus(0);
                 baseMapper.updateById(ezUser);
-                LambdaUpdateWrapper<EzUserLimit> ezUserLimitLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-                ezUserLimitLambdaUpdateWrapper.eq(EzUserLimit::getUserId, ezUser.getUserId());
-                ezUserLimitLambdaUpdateWrapper.set(EzUserLimit::getLogin, 0);
+                LambdaUpdateWrapper<OtcUserLimit> ezUserLimitLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                ezUserLimitLambdaUpdateWrapper.eq(OtcUserLimit::getUserId, ezUser.getUserId());
+                ezUserLimitLambdaUpdateWrapper.set(OtcUserLimit::getLogin, 0);
                 limitService.update(ezUserLimitLambdaUpdateWrapper);
             }else {
                 throw new UserException("此账号已被封锁", null);
             }
-        }*/
+        }
         //密码错误
         if (!EncoderUtil.matches(authenticationRequest.getPassword(), ezUser.getPassword())) {
             throw new UserPasswordNotMatchException();

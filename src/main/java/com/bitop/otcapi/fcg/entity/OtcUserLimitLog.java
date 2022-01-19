@@ -16,7 +16,7 @@ import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("ez_user_limit_log")
+@TableName("otc_user_limit_log")
 @ApiModel(value="EzUserLimitLog对象", description="封号日志记录表")
 public class OtcUserLimitLog extends BaseEntity implements Serializable {
 

@@ -2,7 +2,10 @@ package com.bitop.otcapi.fcg.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bitop.otcapi.fcg.entity.OtcOrderMatch;
+import com.bitop.otcapi.fcg.entity.req.AdMatchOrderQueryReqDto;
+import com.bitop.otcapi.fcg.entity.resp.OrderRecordRespDto;
 import com.bitop.otcapi.response.Response;
+import com.bitop.otcapi.response.ResponseList;
 
 public interface OtcOrderMatchService extends IService<OtcOrderMatch> {
 
@@ -18,7 +21,7 @@ public interface OtcOrderMatchService extends IService<OtcOrderMatch> {
     /***
      * @Description: 买家确认 付款
      * @Param: [matchOrderNo]
-     * @return: com.ezcoins.response.BaseResponse
+     * @return: com.ezcoins.response.Response
      * @Author: taylor
      * @Date: 2022/01/04
      */
@@ -27,11 +30,24 @@ public interface OtcOrderMatchService extends IService<OtcOrderMatch> {
     /**
      * @Description: 卖家放款
      * @Param: [matchOrderNo]
-     * @return: com.ezcoins.response.BaseResponse
-     * @Author: Wanglei
-     * @Date: 2021/6/19
+     * @return: com.ezcoins.response.Response
+     * @Author: taylor
+     * @Date: 2022/01/04
      */
     Response sellerPut(String matchOrderNo,boolean isAdmin);
 
 
+    /**
+     * 付款失败  后台修改订单为取消
+     */
+    void paymentFail(String matchOrderNo);
+
+    /***
+     * @Description: 广告订单匹配订单
+     * @Param: [matchOrderQueryReqDto]
+     * @return: com.ezcoins.response.ResponseList<com.ezcoins.project.otc.entity.resp.OrderRecordRespDto>
+     * @Author: taylor
+     * @Date: 2022/01/18
+     */
+    ResponseList<OrderRecordRespDto> adMatchOrder(AdMatchOrderQueryReqDto matchOrderQueryReqDto);
 }

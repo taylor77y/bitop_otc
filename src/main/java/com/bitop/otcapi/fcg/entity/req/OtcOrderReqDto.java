@@ -39,10 +39,10 @@ public class OtcOrderReqDto {
     private BigDecimal maximumLimit;
 
     @ApiModelProperty(value = "订单类型(0:买  1：卖)")
-    private String type;
+    private Integer type;
 
     @ApiModelProperty(value = "是否为接单广告(0:是 1：否)")
-    private String isAdvertising;
+    private Integer isAdvertising;
 
     @ApiModelProperty(value = "支付方式1")
     private Integer paymentMethod1;

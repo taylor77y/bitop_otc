@@ -1,5 +1,7 @@
 package com.bitop.otcapi.fcg.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bitop.otcapi.constant.*;
 import com.bitop.otcapi.context.ContextHandler;
@@ -8,6 +10,9 @@ import com.bitop.otcapi.exception.BaseException;
 import com.bitop.otcapi.fcg.entity.CoinRecord;
 import com.bitop.otcapi.fcg.entity.OtcOrder;
 import com.bitop.otcapi.fcg.entity.OtcOrderMatch;
+import com.bitop.otcapi.fcg.entity.OtcOrderPayment;
+import com.bitop.otcapi.fcg.entity.req.AdMatchOrderQueryReqDto;
+import com.bitop.otcapi.fcg.entity.resp.OrderRecordRespDto;
 import com.bitop.otcapi.fcg.entity.vo.BalanceChange;
 import com.bitop.otcapi.fcg.mapper.OtcOrderMatchMapper;
 import com.bitop.otcapi.fcg.service.*;
@@ -15,6 +20,8 @@ import com.bitop.otcapi.manager.AsyncManager;
 import com.bitop.otcapi.manager.factory.AsyncFactory;
 import com.bitop.otcapi.redis.RedisCache;
 import com.bitop.otcapi.response.Response;
+import com.bitop.otcapi.response.ResponseList;
+import com.bitop.otcapi.util.BeanUtils;
 import com.bitop.otcapi.util.DateUtils;
 import com.bitop.otcapi.util.MessageUtils;
 import com.bitop.otcapi.websocket.WebSocketHandle;
@@ -23,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -48,6 +56,9 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
 
     @Autowired
     private OtcUserService userService;
+
+    @Autowired
+    private OtcOrderPaymentService orderPaymentService;
 
     /***
      * @Description: 用户 取消订单（两个状态可取消订单  1：接单广告（卖家未接受订单）用户免费取消
@@ -198,37 +209,37 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
         //匹配订单分为 买单 和 卖单  //查询到otc 订单
         BigDecimal amount =orderMatch.getAmount();
         BigDecimal totalAmount = amount.add(orderMatch.getFee());
-//        if (orderMatch.getOrderNo() == null) {//一键卖币放行
-//            //手续费计算
-//            BalanceChange b1 = new BalanceChange();
-//            b1.setCoinName(orderMatch.getCoinName());
-//            b1.setFrozen(totalAmount.negate());
-//            b1.setIncomeType(CoinConstants.IncomeType.PAYOUT.getType());
-//            b1.setMainType(CoinConstants.MainType.NORECORD.getType());
-//            b1.setUserId(userId);
-//            cList.add(b1);
-//            if (!accountService.balanceChangeSYNC(cList)) {// 资产变更异常
-//                throw new AccountOperationBusyException();
-//            }
-//            Record rec = new Record();
-//            rec.setUserId(userId);
-//            rec.setCoinName(orderMatch.getCoinName());
-//            rec.setFee(BigDecimal.ZERO);
-//            rec.setIncomeType(CoinConstants.IncomeType.PAYOUT.getType());
-//            rec.setMainType(CoinConstants.MainType.TRANSFEROUT.getType());
-//            rec.setSonType(RecordSonType.TRANSFER_OUT);
-//            rec.setStatus(CoinConstants.RecordStatus.OK.getStatus());
-//            rec.setAmount(totalAmount.negate());
-//            recordService.save(rec);
-//            WebSocketHandle.accountChange(userId, orderMatch.getCoinName(), amount, RecordSonType.TRANSFER_OUT);
-//
-//            orderMatch.setStatus(MatchOrderStatus.COMPLETED.getCode());
-//            orderMatch.setFinishTime(nowDate);
-//            baseMapper.updateById(orderMatch);
-//            //给用户一个信号
-//            WebSocketHandle.orderStatusChange(userId, MatchOrderStatus.COMPLETED.getCode());
-//            return Response.success();
-//        }
+        if (orderMatch.getOrderNo() == null) {//一键卖币放行
+            //手续费计算
+            BalanceChange b1 = new BalanceChange();
+            b1.setCoinName(orderMatch.getCoinName());
+            b1.setFrozen(totalAmount.negate());
+            b1.setIncomeType(CoinConstants.IncomeType.PAYOUT.getType());
+            b1.setMainType(CoinConstants.MainType.NORECORD.getType());
+            b1.setUserId(userId);
+            cList.add(b1);
+            if (!accountService.balanceChangeSYNC(cList)) {// 资产变更异常
+                throw new AccountOperationBusyException();
+            }
+            CoinRecord rec = new CoinRecord();
+            rec.setUserId(userId);
+            rec.setCoinName(orderMatch.getCoinName());
+            rec.setFee(BigDecimal.ZERO);
+            rec.setIncomeType(CoinConstants.IncomeType.PAYOUT.getType());
+            rec.setMainType(CoinConstants.MainType.TRANSFEROUT.getType());
+            rec.setSonType(RecordSonType.TRANSFER_OUT);
+            rec.setStatus(CoinConstants.RecordStatus.OK.getStatus());
+            rec.setAmount(totalAmount.negate());
+            recordService.save(rec);
+            WebSocketHandle.accountChange(userId, orderMatch.getCoinName(), amount, RecordSonType.TRANSFER_OUT);
+
+            orderMatch.setStatus(MatchOrderStatus.COMPLETED.getCode());
+            orderMatch.setFinishTime(LocalDateTime.now());
+            baseMapper.updateById(orderMatch);
+            //给用户一个信号
+            WebSocketHandle.orderStatusChange(userId, MatchOrderStatus.COMPLETED.getCode());
+            return Response.success();
+        }
         OtcOrder ezOtcOrder = otcOrderService.getById(orderMatch.getOrderNo());
         //减少冻结的币
         BigDecimal frozeAmount = ezOtcOrder.getFrozeAmount();
@@ -274,7 +285,7 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
             BigDecimal subtract = ezOtcOrder.getTotalAmount().subtract(ezOtcOrder.getQuotaAmount());
             if(ezOtcOrder.getMinimumLimit().compareTo(subtract) > 0){
                 flag1 = true;
-                ezOtcOrder.setStatus("1");
+                ezOtcOrder.setStatus(1);
                 ezOtcOrder.setEndTime(LocalDateTime.now());
                 otcOrderService.updateById(ezOtcOrder);
             }
@@ -313,7 +324,7 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
                 b.setFee(BigDecimal.ZERO);
                 cList.add(b);
                 //改变订单状态
-                ezOtcOrder.setStatus("1");
+                ezOtcOrder.setStatus(1);
                 ezOtcOrder.setEndTime(LocalDateTime.now());
             }
             otcOrderService.updateById(ezOtcOrder);
@@ -358,5 +369,119 @@ public class OtcOrderMatchServiceImpl extends ServiceImpl<OtcOrderMatchMapper, O
         }
 
         return Response.success();
+    }
+
+
+    /**
+     * 付款失败  后台修改订单为取消
+     *
+     * @param matchOrderNo
+     */
+    @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ, propagation = Propagation.MANDATORY, rollbackFor = Exception.class)
+    public void paymentFail(String matchOrderNo) {
+        OtcOrderMatch orderMatch = baseMapper.selectById(matchOrderNo);
+        //判断订单状态
+        if (!orderMatch.getStatus().equals(MatchOrderStatus.APPEALING.getCode())) {
+            throw new BaseException("订单状态已发生变化");
+        }
+        //匹配订单分为 买单 和 卖单  //查询到otc 订单
+        OtcOrder ezOtcOrder = otcOrderService.getById(orderMatch.getOrderNo());
+        ezOtcOrder.setQuotaAmount(ezOtcOrder.getQuotaAmount().subtract(orderMatch.getAmount()));
+        otcOrderService.updateById(ezOtcOrder);
+
+        orderMatch.setStatus(MatchOrderStatus.CANCELLED.getCode());
+        orderMatch.setFinishTime(LocalDateTime.now());
+        baseMapper.updateById(orderMatch);
+
+        String buyUserId;
+        String sellUserId;
+        //交易类型(0:买  1：卖)
+        if ("0".equals(orderMatch.getType())) {
+            buyUserId = orderMatch.getOtcOrderUserId();
+            sellUserId = orderMatch.getUserId();
+        } else {
+            buyUserId = orderMatch.getUserId();
+            sellUserId = orderMatch.getOtcOrderUserId();
+        }
+        List<BalanceChange> cList = new ArrayList<>();
+        BalanceChange b = new BalanceChange();
+        b.setCoinName(orderMatch.getCoinName());
+        b.setAvailable(orderMatch.getAmount());
+        b.setFrozen(orderMatch.getAmount().negate());
+        b.setIncomeType(CoinConstants.IncomeType.INCOME.getType());
+        b.setMainType(CoinConstants.MainType.FROZEN.getType());
+        b.setUserId(sellUserId);
+        cList.add(b);
+        if (!accountService.balanceChangeSYNC(cList)) {// 资产变更异常
+            throw new AccountOperationBusyException();
+        }
+        AsyncManager.me().execute(AsyncFactory.sendSysChat(sellUserId, buyUserId, orderMatch.getOrderMatchNo(),
+                SysOrderConstants.SysChatMsg.APPEAL_CANCEL, MatchOrderStatus.CANCELLED));
+        //降低买单完成率
+        AsyncManager.me().execute(AsyncFactory.updateCount(sellUserId, buyUserId, orderMatch.getPaymentTime(), LocalDateTime.now(), true, "1"));
+    }
+
+
+
+    /***
+     * @Description: 广告订单匹配订单
+     * @Param: [matchOrderQueryReqDto]
+     * @return: com.ezcoins.response.ResponseList<com.ezcoins.project.otc.entity.resp.OrderRecordRespDto>
+     * @Author: Wanglei
+     * @Date: 2021/7/8
+     * @param matchOrderQueryReqDto
+     */
+    @Override
+    public ResponseList<OrderRecordRespDto> adMatchOrder(AdMatchOrderQueryReqDto matchOrderQueryReqDto) {
+        Page<OtcOrderMatch> page = new Page<>(matchOrderQueryReqDto.getPage(), matchOrderQueryReqDto.getLimit());
+        LambdaQueryWrapper<OtcOrderMatch> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OtcOrderMatch::getOtcOrderUserId, ContextHandler.getUserId());
+        String orderNo = matchOrderQueryReqDto.getOrderNo();
+        if (StringUtils.hasText(orderNo)) {
+            queryWrapper.eq(OtcOrderMatch::getOrderNo, orderNo);
+        }
+        String status = matchOrderQueryReqDto.getStatus();
+        if (StringUtils.isEmpty(status)) {//已处理订单
+            queryWrapper.and(wq -> wq
+                    .eq(OtcOrderMatch::getStatus, MatchOrderStatus.COMPLETED.getCode()).or()
+                    .eq(OtcOrderMatch::getStatus, MatchOrderStatus.ORDERBEENCANCELLED.getCode()).or()
+                    .eq(OtcOrderMatch::getStatus, MatchOrderStatus.CANCELLED.getCode()).or()
+                    .eq(OtcOrderMatch::getStatus, MatchOrderStatus.REFUSE.getCode()));
+        }else if ("2".equals(status)) {//未处理
+            queryWrapper.and(wq -> wq
+                    .eq(OtcOrderMatch::getStatus, MatchOrderStatus.PENDINGORDER.getCode()).or()
+                    .eq(OtcOrderMatch::getStatus, MatchOrderStatus.APPEALING.getCode()).or()
+                    .eq(OtcOrderMatch::getStatus, MatchOrderStatus.PAID.getCode()).or()
+                    .eq(OtcOrderMatch::getStatus, MatchOrderStatus.WAITFORPAYMENT.getCode()));
+        }
+        queryWrapper.orderByDesc(OtcOrderMatch::getCreateTime);
+        Page<OtcOrderMatch> matchPage = baseMapper.selectPage(page, queryWrapper);
+        List<OtcOrderMatch> records = matchPage.getRecords();
+        List<OrderRecordRespDto> orderRecordRespDtos = new ArrayList<>();
+        records.forEach(e -> {
+            OrderRecordRespDto orderRespDto = new OrderRecordRespDto();
+            LambdaQueryWrapper<OtcOrderPayment> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+//            BeanUtils.copyBeanProp(orderRespDto, e);
+            BeanUtils.copyProperties(e, orderRespDto);
+//            orderRespDto.setAdvertisingName(e.getMatchAdvertisingName());
+            if (orderRespDto.getStatus().equals(MatchOrderStatus.COMPLETED.getCode()) || orderRespDto.getStatus().equals(MatchOrderStatus.PAID.getCode())
+                    || orderRespDto.getStatus().equals(MatchOrderStatus.APPEALING.getCode()) ) {
+                ArrayList<OtcOrderPayment> list = new ArrayList<>();
+                list.add(orderPaymentService.getById(e.getOrderPaymentId()));
+                orderRespDto.setEzOtcOrderPayments(list);
+            } else {
+                if ("1".equals(e.getType())) {
+                    lambdaQueryWrapper.eq(OtcOrderPayment::getOrderNo, e.getOrderMatchNo());
+                } else {
+                    lambdaQueryWrapper.eq(OtcOrderPayment::getOrderMatchNo, e.getOrderMatchNo());
+                }
+                lambdaQueryWrapper.eq(OtcOrderPayment::getOrderMatchNo, e.getOrderMatchNo());//有问题
+                orderRespDto.setEzOtcOrderPayments(orderPaymentService.list(lambdaQueryWrapper));
+            }
+            orderRespDto.setNowTime(LocalDateTime.now());
+            orderRecordRespDtos.add(orderRespDto);
+        });
+        return ResponseList.success(orderRecordRespDtos);
     }
 }

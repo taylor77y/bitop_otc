@@ -133,7 +133,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         b.setCoinName(coinName);
         b.setUserId(userId);
         b.setIncomeType(CoinConstants.IncomeType.PAYOUT.getType());
-        b.setMainType(CoinConstants.MainType.FREE.getType());
+        b.setMainType(CoinConstants.MainType.FEE.getType());
         b.setSonType(RecordSonType.HANDLING_FEE);
         b.setAvailable(fee.negate());
         cList.add(b);
@@ -166,7 +166,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         }
         BeanUtils.copyProperties(otcOrderReqDto,ezOtcOrder);
         ezOtcOrder.setAdvertisingName(one.getAdvertisingName());
-        ezOtcOrder.setStatus("0");
+        ezOtcOrder.setStatus(0);
         //存入新的订单
         baseMapper.insert(ezOtcOrder);
         //给用户一个新订单信号
@@ -225,7 +225,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
             }
         }
         //改变订单状态
-        ezOtcOrder.setStatus("1");
+        ezOtcOrder.setStatus(1);
         ezOtcOrder.setEndTime(LocalDateTime.now());
         baseMapper.updateById(ezOtcOrder);
         return Response.success();
@@ -259,7 +259,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
 //                        .or().eq(OtcOrderMatch::getStatus, MatchOrderStatus.PAID.getCode())
 //                        .or().eq(OtcOrderMatch::getStatus, MatchOrderStatus.APPEALING.getCode()));
 //        OtcOrderMatch orderMatch = orderMatchService.getOne(matchLambdaQueryWrapper);//匹配订单是否有未完成
-        OtcOrderMatch orderMatch = orderMatchMapper.existUnfinishedOrderByTypeAndStatus(userId,ezOtcOrder.getType(),statusArray);
+        OtcOrderMatch orderMatch = orderMatchMapper.existUnfinishedOrderByTypeAndStatus(userId,ezOtcOrder.getType().toString(),statusArray);
         if (!ObjectUtils.isEmpty(orderMatch)) {
             BeanUtils.copyProperties(orderMatch, details);
             details.setNowTime(new Date());
@@ -306,7 +306,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
             return Response.error(MessageUtils.message("输入数量不满足条件范围"));
         }
         BigDecimal totalAmount = ezOtcOrder.getTotalAmount();//广告总数量
-        BigDecimal quotaAmount = amount;//ezOtcOrder.getQuotaAmount();//匹配数量
+        BigDecimal quotaAmount = ezOtcOrder.getQuotaAmount();//匹配数量
         BigDecimal nuQuotaAmount = totalAmount.subtract(quotaAmount);//未匹配的数量
         //未匹配的数量  是否大于购买数量
         if (nuQuotaAmount.compareTo(amount) < 0) {
@@ -328,7 +328,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         match.setUserId(userId);
         match.setOtcOrderUserId(ezOtcOrder.getUserId());
         match.setOrderMatchNo(orderMatchNo);
-        match.setOrderType("1");
+        match.setOrderType(1);
         match.setAmount(placeOrderReqDto.getAmount());
         match.setTotalPrice(totalPrice);
         match.setAdvertisingName(map.get(ezOtcOrder.getUserId()).getAdvertisingName());
@@ -371,7 +371,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
             }
         }
         //查看订单是否为接单广告
-        String isAdvertising = ezOtcOrder.getIsAdvertising();
+        String isAdvertising = String.valueOf(ezOtcOrder.getIsAdvertising());
         Integer prompt = null;
         String sellUserId = null;
         String buyUserId = null;
@@ -418,7 +418,7 @@ public class OtcOrderServiceImpl extends ServiceImpl<OtcOrderMapper, OtcOrder> i
         }
 
         //给用户一个信号
-        WebSocketHandle.otherAuthentication(ezOtcOrder.getUserId(),ezOtcOrder.getType(),
+        WebSocketHandle.otherAuthentication(ezOtcOrder.getUserId(),ezOtcOrder.getType().toString(),
                 placeOrderReqDto.getAmount()+ezOtcOrder.getCoinName());
 
         //返回订单
